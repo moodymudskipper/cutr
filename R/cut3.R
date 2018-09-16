@@ -48,13 +48,16 @@ cut3 <- function(
   output <- match.arg(output)
   i >= 1 || what == "breaks" || stop("i must be positive")
 
+  # handle factors
+  if (is.factor(x)) fact_lvls <- levels(x)
+
   # convert "n_by_group" case into a "groups" case
   if (what == "n_by_group") {
     i <- max(1, floor(sum(!is.na(x))/i))
     what <- "groups"}
 
   # get breaks
-  cuts <- get_cuts(x, i, what, expand, crop, closed, optim_fun)
+  cuts <- get_cuts(as.numeric(x), i, what, expand, crop, closed, optim_fun)
   if (length(cuts) == 1 && !expand)
     stop("Can't cut data if only one break is provided and `expand` is FALSE")
 

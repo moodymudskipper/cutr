@@ -65,11 +65,11 @@ format_interval <- function(cuts, closed, open_end, brackets, sep, format_fun,..
 cut_explicit <- function(x, cuts , labels, simplify, closed, open_end, brackets, sep, center_fun, format_fun, ...) {
   #browser()
   cuts <- unique(cuts)
-  bins <- .bincode(x, breaks = cuts, right = closed == "right", include.lowest = !open_end)
-
+  bins <- .bincode(as.numeric(x), breaks = cuts, right = closed == "right", include.lowest = !open_end)
 
   if (is.null(labels)) {
     if (is.null(center_fun)) {
+      if(is.factor(x)) cuts <- setNames(cuts,levels(x)[cuts])
       labels <- format_interval(cuts, closed, open_end, brackets, sep, format_fun,...)
 
       if (simplify) {
