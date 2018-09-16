@@ -1,5 +1,19 @@
 
 
+#' Middle of range
+#'
+#' For easy use in center_fun argument of cut3
+#'
+#' @param x a numeric vector
+#'
+#' @return a double
+#' @export
+#'
+#' @examples
+#' middle(c(10,12,20))
+middle <- function(x) {
+  mean(range(x))
+}
 
 cut_explicit <- function(x, cuts , labels, simplify, closed, squeeze, open_end, brackets, sep, center_fun, format_fun, ...) {
   #browser()

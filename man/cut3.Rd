@@ -15,6 +15,34 @@ cut3(x, i, what = c("breaks", "groups", "n_by_group", "n_intervals",
 \arguments{
 \item{x}{numeric vector to classify into intervals}
 
+\item{i}{numeric or character, main parameter depending on `what`}
+
+\item{what}{character, choices can be abreviated}
+
+\item{labels}{character of the same length as the resulting bins}
+
+\item{closed}{character, which side of the intervals should be closed}
+
+\item{expand}{logical, if TRUE cuts are added if necessary to cover min and max values}
+
+\item{crop}{logical, if TRUE intervals which go past the min or max values will be cropped}
+
+\item{simplify}{logical, if TRUE categories containing only one distinct
+value will be named by it}
+
+\item{squeeze}{logical, if TRUE all bins are cropped so they are closed on
+both sides on their min and max values, useful for sparse data and factors}
+
+\item{open_end}{keep the open side open at the extremities}
+
+\item{sep, brackets}{character, used to build the default labels}
+
+\item{output}{character, class of output}
+
+\item{center_fun}{function or formula to apply on bin content to build a label}
+
+\item{optim_fun}{character or 2 argument function}
+
 \item{format_fun}{formatting function}
 
 \item{...}{additional arguments passed to \code{format_fun}}
@@ -23,17 +51,65 @@ cut3(x, i, what = c("breaks", "groups", "n_by_group", "n_intervals",
 a factor variable with levels of the form \code{"[a,b]"} or formatted means (character strings) unless \code{onlycuts} is \code{TRUE} in which case a numeric vector is returned
 }
 \description{
-This behaves by default the same as Frank Harrel's \code{Hmisc::cut2},
-and the code is essentially taken straight from the original.
-The difference is that the \code{digits} argument was renamed to \code{levels.digits}
-and that there are 2 additonal arguments : \code{format_fun} and \code{...} .
-\code{format_fun} supports choosing another formating function than \code{format}, and \code{...}
-is passed to the formatting function.
+Enhanced cut that supports among other things factor inputs, optimal grouping,
+and flexible formatting.
 }
-\details{
-The motivation that led to modify the function was to be able to use \code{format_metric}
-to have more readable cuts in some cases.
+\section{what}{
+
+
+Depending on the value of `what`, i is:
+
+\describe{
+  \item{breaks}{the actual cut points}
+  \item{groups}{the number of desired groups, by default cuts are
+  calculated as quantiles, which might not always give i groups for some
+  distributions, see help on optim_fun below to handle these cases }
+  \item{n_by_group}{the number of desired items by group, with the
+  same caveat as above}
+  \item{n_intervals}{the number of desired intervals}
+  \item{width}{the interval width, which will be centered on 0}
+  \item{width_0}{same but intervals will start on 0}
+  \item{width_min}{same but intervals will start on min value}
+  \item{width_max}{same but intervals will end on max value}
 }
+}
+
+\section{optim_fun}{
+
+
+only for what = groups. optim_fun will be applied on all possible
+combinations. It will be fed the size of bins as its first argument and the
+cuts as its second. From the results the combination that gives the minimum
+result will be kept.
+
+Alternatively the parameter can be any of the following strings:
+
+\describe{
+  \item{balanced}{Returns a combination with the minimal group size variance}
+  \item{biggest_small_bin}{Returns a combination that has the biggest smallest
+  bin, to avoid narrow intervals}
+  \item{smallest_big_bin}{Returns a combination that has the biggest smallest
+  bin, to avoid wide intervals}
+}
+
+In practice the results should be quite similar and balanced should be enough
+most of the time
+}
+
+\section{format_fun}{
+
+
+The original base::cut uses formatC in its code to format the labels while
+the commonly used Hmisc::cut2 uses format. cut3 allows one to choose and to
+pass additional parameters to ... .
+
+Any formating function can be used as long as it takes as a first argument a
+vector of characters and returns one.
+
+The function format_metric including in cutr permits additional formatting
+especially well suited for cut3
+}
+
 \examples{
 set.seed(1)
 numbers  <- cumsum(abs(rnorm(100,100,100)))
