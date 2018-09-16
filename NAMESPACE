@@ -2,3 +2,4 @@
 
 export(cut3)
 export(format_metric)
+export(signif2)
