@@ -49,7 +49,7 @@ cut3 <- function(
   i >= 1 || what == "breaks" || stop("i must be positive")
 
   # handle factors
-  if (is.factor(x)) fact_lvls <- levels(x)
+  if (is.factor(x) && what == "breaks" && is.character(i)) i <- match(i,levels(x))
 
   # convert "n_by_group" case into a "groups" case
   if (what == "n_by_group") {
