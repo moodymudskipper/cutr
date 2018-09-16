@@ -30,7 +30,7 @@ cut_explicit <- function(
       }
     } else {
       # apply center_fun
-      vals <- tapply(x, bins, function(w) center_fun(w, na.rm = TRUE))
+      vals <- tapply(x, bins, function(w) center_fun(w))
       labels <- format_fun(vals, ...)
     }
   }
