@@ -29,14 +29,15 @@ cut3 <- function(
   what = c("breaks","groups","n_by_group","n_intervals","width",
            "width_0", "width_min", "width_max"),
   labels     = NULL,
+  closed     = c("left","right"),
   expand     = TRUE,
   crop       = FALSE,
   simplify   = TRUE,
-  closed     = c("left","right","both"),
+  squeeze    = FALSE,
   open_end   = FALSE,
-  ordered    = FALSE,
   brackets   = c("(","[",")","]"),
   sep        = ",",
+  output     = c("ordered","factor","character"),
   center_fun = NULL,
   optim_fun  = NULL,
   format_fun = formatC, ...){
@@ -44,22 +45,35 @@ cut3 <- function(
   # checks
   what   <- match.arg(what)
   closed <- match.arg(closed)
+  output <- match.arg(output)
   i >= 1 || what == "breaks" || stop("i must be positive")
 
+  # convert "n_by_group" case into a "groups" case
   if (what == "n_by_group") {
     i <- max(1, floor(sum(!is.na(x))/i))
     what <- "groups"}
 
-  cuts <- get_cuts(x, i, what, expand, crop)
+  # get breaks
+  cuts <- get_cuts(x, i, what, expand, crop, closed, optim_fun)
   if (length(cuts) == 1 && !expand)
     stop("Can't cut data if only one break is provided and `expand` is FALSE")
-  xy <- cut_explicit(x, cuts , labels, simplify, closed,
+
+  # warn if incorrect number of labels, and proceed with auto labels
+  if (!is.null(labels)) {
+    if (length(labels) != length(cuts) - 1) warning("incorrect number of labels")
+    labels <- NULL
+  }
+
+  # get raw output
+  bins <- cut_explicit(x, cuts , labels, simplify, closed,
                      open_end, brackets, sep, center_fun, format_fun, ...)
 
-  x <- xy[[1]]
-  y <- xy[[2]]
+  # coerce to appropriate class (ordered by default)
+  if (output == "character") {
+    bins <- as.character(bins)
+  } else if (output == "factor") {
+    bins <- factor(bins,ordered = FALSE)
+  }
 
-  attr(y, "class") <- "factor"
-  if (ordered) y <- factor(y, ordered = TRUE)
-  y
+  bins
 }

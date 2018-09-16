@@ -1,11 +1,19 @@
-get_cuts <- function(x, i, what, expand, crop){
+get_cuts <- function(x, i, what, expand, crop, closed = "left", optim_fun = NULL){
   xrange <- range(x, na.rm = TRUE)
   xmin <- xrange[1]
   xmax <- xrange[2]
 
   cuts <- switch(
     what,
-    groups      = quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE,names = FALSE),
+    groups      = {
+      if (is.null(optim_fun)) {
+        cuts <- quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE,names = FALSE,type = 3)
+      } else {
+        cuts <- get_optimal_cutpoints(x, i, optim_fun, closed)
+        #cuts <- c(xmin,cuts[cuts > xmin & cuts < xmax],xmax)
+      }
+      cuts
+    },
     breaks      = {
       cuts <- sort(i)
       if (expand) {
@@ -34,10 +42,6 @@ get_cuts <- function(x, i, what, expand, crop){
   cuts
 }
 
-
-# simplify could work only on cutpoints or work for all points, and then it could crop neighbours or not
-# 4 options : any_and_crop_neighbours, cutpoints, any, NULL
-
 format_interval <- function(cuts, closed, open_end, brackets, sep, format_fun,...){
   `.(` <- brackets[1]
   `.[` <- brackets[2]
@@ -50,8 +54,8 @@ format_interval <- function(cuts, closed, open_end, brackets, sep, format_fun,..
                 if (open_end) `.)` else `.]`)
   } else if (closed == "right") {
     right     <- `.]`
-    left    <- c(rep(`.(`, l - 2),
-                  if (open_end) `.(` else `.[`)
+    left    <- c(if (open_end) `.(` else `.[`,
+                 rep(`.(`, l - 2))
   }
   cuts_chr <- format_fun(cuts, ...)
   labels   <- paste(left, cuts_chr[-l], sep, cuts_chr[-1], right, sep = "")
@@ -59,30 +63,28 @@ format_interval <- function(cuts, closed, open_end, brackets, sep, format_fun,..
 }
 
 cut_explicit <- function(x, cuts , labels, simplify, closed, open_end, brackets, sep, center_fun, format_fun, ...) {
-
+  #browser()
   cuts <- unique(cuts)
-  y <- .bincode(x,cuts, closed == "right", !open_end)
+  bins <- .bincode(x, breaks = cuts, right = closed == "right", include.lowest = !open_end)
 
-  if (!is.null(labels)) {
-    if (length(labels) != length(cuts) - 1) warning("incorrect number of labels")
-    labels <- NULL
-  }
 
   if (is.null(labels)) {
     if (is.null(center_fun)) {
       labels <- format_interval(cuts, closed, open_end, brackets, sep, format_fun,...)
+
       if (simplify) {
-        ind <- which(!duplicated(y) & !duplicated(y,fromLast = TRUE))
+        ind <- tapply(x,bins,FUN = function(xi) if (length(unique(xi)) == 1) xi[1] else NA)
+        ind <- ind[!is.na(ind)]
         if (length(ind))
-          labels[y[ind]] <- format_fun(c(x[ind],cuts),...)[1:length(ind)]
+          labels[as.numeric(names(ind))] <- ind
       }
     } else {
-      vals <- tapply(x, y, function(w) center_fun(w, na.rm = TRUE))
+      vals <- tapply(x, bins, function(w) center_fun(w, na.rm = TRUE))
       labels <- format_fun(vals, ...)
     }
   }
-  # message("using traditional cut with right = FALSE and include.lowest = FALSE")
-  # print(table(cut(x,cuts,right = FALSE, include.lowest = TRUE)))
-  levels(y) <- labels
-  list(x,y)
+
+  bins <- factor(bins,labels = labels,ordered = TRUE)
+  bins
 }
+

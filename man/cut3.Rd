@@ -6,10 +6,11 @@
 \usage{
 cut3(x, i, what = c("breaks", "groups", "n_by_group", "n_intervals",
   "width", "width_0", "width_min", "width_max"), labels = NULL,
-  expand = TRUE, crop = FALSE, simplify = TRUE, closed = c("left",
-  "right", "both"), open_end = FALSE, ordered = FALSE,
-  brackets = c("(", "[", ")", "]"), sep = ",", center_fun = NULL,
-  optim_fun = NULL, format_fun = formatC, ...)
+  closed = c("left", "right"), expand = TRUE, crop = FALSE,
+  simplify = TRUE, squeeze = FALSE, open_end = FALSE,
+  brackets = c("(", "[", ")", "]"), sep = ",", output = c("ordered",
+  "factor", "character"), center_fun = NULL, optim_fun = NULL,
+  format_fun = formatC, ...)
 }
 \arguments{
 \item{x}{numeric vector to classify into intervals}
@@ -32,8 +33,6 @@ is passed to the formatting function.
 \details{
 The motivation that led to modify the function was to be able to use \code{format_metric}
 to have more readable cuts in some cases.
-
-The original \code{digits} argument was renamed not to conflict with the \code{digits} argument used by formatting functions.
 }
 \examples{
 set.seed(1)

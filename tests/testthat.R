@@ -26,7 +26,7 @@ table(cut3(numbers,-5,"breaks"))
 
 # format is default format function, we can pass the trim parameter to have
 # results similar to cut
-table(cut3(numbers,-5,"breaks", trim=TRUE))
+table(cut3(numbers,-5,"breaks", trim = TRUE))
 
 # or change the formatting function to formatC
 table(cut3(numbers,-5,"breaks", format_fun = formatC))
@@ -79,10 +79,16 @@ table(cut3(numbers,20,"width_min", crop = TRUE))
 table(cut3(numbers,20,"width_max"))
 table(cut3(numbers,20,"width_max", crop = TRUE))
 
-
 ##################
 # brackets       #
 ##################
 
 table(cut3(numbers,50,"width", brackets = c("*","","","*"), sep = " ~ "))
 
+numbers2 <- c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
+  2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+  17, 18, 19, 20)
+
+# table(cut3(numbers2,4,"g",optim_fun = balanced, closed="right"))
+# ggplot2::cut_number(numbers2,4)
+# Hmisc::cut2(numbers2,4)
