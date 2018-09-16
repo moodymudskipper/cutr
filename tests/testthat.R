@@ -38,6 +38,7 @@ table(cut3(numbers,300,"breaks"))
 table(cut3(numbers,c(100,150,200),"breaks"))
 
 # cuts inside, expand = FALSE
+
 table(cut3(numbers,c(100,150,200),"breaks",expand = FALSE))
 
 # cuts outside, default crop = FALSE

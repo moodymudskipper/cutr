@@ -1,4 +1,7 @@
-cut_explicit <- function(x, cuts , labels, simplify, closed, open_end, brackets, sep, center_fun, format_fun, ...) {
+
+
+
+cut_explicit <- function(x, cuts , labels, simplify, closed, squeeze, open_end, brackets, sep, center_fun, format_fun, ...) {
   #browser()
   cuts <- unique(cuts)
   bins <- .bincode(as.numeric(x), breaks = cuts, right = closed == "right", include.lowest = !open_end)
@@ -6,8 +9,12 @@ cut_explicit <- function(x, cuts , labels, simplify, closed, open_end, brackets,
   if (is.null(labels)) {
     if (is.null(center_fun)) {
       # format
-      if (is.factor(x)) cuts <- setNames(cuts,levels(x)[cuts])
+      if (is.factor(x)) cuts <- setNames(cuts, levels(x)[cuts])
+      if (squeeze) {
+        labels <- format_interval_squeezed(x, cuts, closed, open_end, brackets, sep, format_fun,...)
+      } else {
       labels <- format_interval(cuts, closed, open_end, brackets, sep, format_fun,...)
+      }
 
       # simplify
       if (simplify) {

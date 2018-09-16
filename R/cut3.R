@@ -68,7 +68,7 @@ cut3 <- function(
   }
 
   # get raw output
-  bins <- cut_explicit(x, cuts , labels, simplify, closed,
+  bins <- cut_explicit(x, cuts , labels, simplify, closed, squeeze,
                      open_end, brackets, sep, center_fun, format_fun, ...)
 
   # coerce to appropriate class (ordered by default)
