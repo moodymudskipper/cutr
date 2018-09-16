@@ -2,4 +2,5 @@
 
 export(cut3)
 export(format_metric)
+export(middle)
 export(signif2)

@@ -105,6 +105,9 @@ cut3 <- function(
   output <- match.arg(output)
   i >= 1 || what == "breaks" || stop("i must be positive")
 
+  # set mappers (handle formula notation if relevant)
+  set_mappers(center_fun, optim_fun, format_fun, only_formulas = TRUE)
+
   # handle factors
   if (is.factor(x) && what == "breaks" && (is.character(i) || is.factor(i))) i <- match(as.character(i),levels(x))
 
@@ -125,8 +128,10 @@ cut3 <- function(
   }
 
   # get raw output
-  bins <- cut_explicit(x, cuts , labels, simplify, closed, squeeze,
-                     open_end, brackets, sep, center_fun, format_fun, ...)
+  bins <- cut_explicit(x = x, cuts = cuts , labels = labels, simplify = simplify,
+                       closed = closed, squeeze = squeeze, open_end = open_end,
+                       brackets = brackets, sep = sep, center_fun = center_fun,
+                       format_fun = format_fun, ...)
 
   # coerce to appropriate class (ordered factor by default)
   if (output == "character") {
