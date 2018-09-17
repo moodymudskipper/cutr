@@ -1,4 +1,4 @@
-get_cuts <- function(x, i, what, expand, crop, closed = "left", optim_fun = NULL){
+get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_fun = NULL){
   xrange <- range(x, na.rm = TRUE)
   xmin <- xrange[1]
   xmax <- xrange[2]
@@ -20,10 +20,20 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", optim_fun = NULL
         if (xmin < cuts[1])            cuts <- c(xmin, cuts)
         if (xmax > cuts[length(cuts)]) cuts <- c(cuts, xmax)
       } else if (crop) {
-        xmin <- min(x[x >= cuts[1]])
-        xmax <- max(x[x <= cuts[length(cuts)]])
+        # we limit x to what's inside the cuts, "inside" depends on `closed`
+        if (closed == "left" || !open_end)
+          xmin <- min(x[x >= cuts[1]]) else
+          xmin <- min(x[x > cuts[1]])
+        if (closed == "right" || !open_end)
+          xmax <- max(x[x <= cuts[length(cuts)]]) else
+          xmax <- max(x[x < cuts[length(cuts)]])
       }
-      if (crop) cuts <- c(xmin,cuts[cuts > xmin & cuts < xmax],xmax)
+      if (crop) {
+        # if xmin is on a closed right border, cropping should not be done
+        # or it will be passed tonext interval
+        if (closed == "left"  || !xmin %in% cuts) cuts <- c(xmin, cuts[cuts > xmin])
+        if (closed == "right" || !xmax %in% cuts) cuts <- c(cuts[cuts < xmax], xmax)
+      }
       cuts
       },
     n_intervals = seq(xmin,xmax, len = i + 1),

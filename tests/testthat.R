@@ -96,10 +96,22 @@ numbers2 <- c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
 
 debugonce(cut3)
 debugonce(cut_explicit)
-table(cut3(numbers,c(100,150),"breaks",c("low","high")))
-table(cut3(numbers,c(100,150),"breaks",middle))
+table(cut3(numbers,c(0,1²00,200),"breaks",c("low","high")))
+table(cut3(numbers,c(0,100,200),"breaks",middle))
 
+################################
+# crop and interval numbers    #
+################################
 
+debugonce(cut_explicit)
+table(cut3(c(1,2,3),c(0,1,2.5,5),"breaks"))
+table(cut3(c(1,2,3),c(0,1,2.5,5),"breaks",closed="right"))
+table(cut3(c(1,2,3),c(0,1,2.5,5),"breaks",closed="right",simplify=FALSE))
+
+table(cut3(c(1,2,3),c(0,1,2.5,5),"breaks", crop= TRUE))
+# what I feared
+table(cut3(c(1,2,3),c(0,1,2.5,5),"breaks", crop=TRUE, closed="right"))
+table(cut3(c(1,2,3),c(0,1,2.5,5),"breaks",closed="right",simplify=FALSE))
 
 # table(cut3(numbers2,4,"g",optim_fun = balanced, closed="right"))
 # ggplot2::cut_number(numbers2,4)

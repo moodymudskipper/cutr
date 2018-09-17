@@ -6,6 +6,7 @@ cut_explicit <- function(
   cuts <- unique(cuts)
   bins <- .bincode(as.numeric(x), breaks = cuts, right = closed == "right", include.lowest = !open_end)
   cuts <- cuts[min(bins):(max(bins) + 1)]
+  bins <- bins - min(bins) + 1
 
   # warn if incorrect number of labels, and proceed with auto labels
   if (!is.null(labels) && !is.function(labels)) {
@@ -30,7 +31,9 @@ cut_explicit <- function(
 
     # simplify
     if (simplify) {
+      # ind is NA or unique(x) value for each bin
       ind <- tapply(x,bins,FUN = function(xi) if (length(unique(xi)) == 1) xi[1] else NA)
+      # remove nas, ind is named with bins
       ind <- ind[!is.na(ind)]
       if (length(ind))
         labels[as.numeric(names(ind))] <-
