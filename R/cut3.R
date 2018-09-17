@@ -6,7 +6,8 @@
 #' @param x numeric vector to classify into intervals
 #' @param i numeric or character, main parameter depending on `what`
 #' @param what character, choices can be abreviated
-#' @param labels character of the same length as the resulting bins
+#' @param labels character of the same length as the resulting bins or function
+#' (or formula) to apply on the relevant bin's values.
 #' @param closed character, which side of the intervals should be closed
 #' @param expand logical, if TRUE cuts are added if necessary to cover min and max values
 #' @param crop logical, if TRUE intervals which go past the min or max values will be cropped
@@ -17,7 +18,6 @@
 #' @param open_end keep the open side open at the extremities
 #' @param sep,brackets character, used to build the default labels
 #' @param output character, class of output
-#' @param center_fun function or formula to apply on bin content to build a label
 #' @param optim_fun character or 2 argument function
 #' @param format_fun formatting function
 #' @param ... additional arguments passed to \code{format_fun}
@@ -95,7 +95,6 @@ cut3 <- function(
   brackets   = c("(","[",")","]"),
   sep        = ",",
   output     = c("ordered","factor","character"),
-  center_fun = NULL,
   optim_fun  = NULL,
   format_fun = formatC, ...){
 
@@ -106,7 +105,7 @@ cut3 <- function(
   i >= 1 || what == "breaks" || stop("i must be positive")
 
   # set mappers (handle formula notation if relevant)
-  set_mappers(center_fun, optim_fun, format_fun, only_formulas = TRUE)
+  set_mappers(labels, optim_fun, format_fun, only_formulas = TRUE)
 
   # handle factors
   if (is.factor(x) && what == "breaks" && (is.character(i) || is.factor(i))) i <- match(as.character(i),levels(x))
@@ -122,16 +121,11 @@ cut3 <- function(
   if (length(cuts) == 1 && !expand)
     stop("Can't cut data if only one break is provided and `expand` is FALSE")
 
-  # warn if incorrect number of labels, and proceed with auto labels
-  if (!is.null(labels)) {
-    if (length(labels) != length(cuts) - 1) warning("incorrect number of labels")
-    labels <- NULL
-  }
 
   # get raw output
   bins <- cut_explicit(x = x, cuts = cuts , labels = labels, simplify = simplify,
                        closed = closed, squeeze = squeeze, open_end = open_end,
-                       brackets = brackets, sep = sep, center_fun = center_fun,
+                       brackets = brackets, sep = sep,
                        format_fun = format_fun, ...)
 
   # coerce to appropriate class (ordered factor by default)

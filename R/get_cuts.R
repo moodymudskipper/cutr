@@ -23,7 +23,9 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", optim_fun = NULL
         xmin <- min(x[x >= cuts[1]])
         xmax <- max(x[x <= cuts[length(cuts)]])
       }
-      if (crop) c(xmin,cuts[cuts > xmin & cuts < xmax],xmax) else cuts},
+      if (crop) cuts <- c(xmin,cuts[cuts > xmin & cuts < xmax],xmax)
+      cuts
+      },
     n_intervals = seq(xmin,xmax, len = i + 1),
     width       = {
       adj_range <- i*(round(xrange/i) + c(-0.5,0.5));
