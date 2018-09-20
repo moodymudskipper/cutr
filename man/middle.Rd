@@ -13,7 +13,7 @@ middle(x)
 a double
 }
 \description{
-For easy use in center_fun argument of cut3
+For easy use in labels argument of cut3
 }
 \examples{
 middle(c(10,12,20))

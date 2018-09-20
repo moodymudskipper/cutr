@@ -117,7 +117,11 @@ cut3 <- function(
 
   # get breaks
   cuts <- get_cuts(x = as.numeric(x), i = i, what = what, expand = expand,
-                   crop = crop, closed = closed, open_end, optim_fun = optim_fun)
+                   crop = crop, closed = closed, open_end = open_end,
+                   optim_fun = optim_fun)
+  # after the cropping is done, ends are closed by definition
+  if(crop || expand) open_end <- FALSE
+
   if (length(cuts) == 1 && !expand)
     stop("Can't cut data if only one break is provided and `expand` is FALSE")
 

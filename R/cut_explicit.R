@@ -3,10 +3,9 @@ cut_explicit <- function(
   x, cuts , labels, simplify, closed, squeeze, open_end,
   brackets, sep, format_fun, ...) {
   #browser()
-  cuts <- unique(cuts)
   bins <- .bincode(as.numeric(x), breaks = cuts, right = closed == "right", include.lowest = !open_end)
-  cuts <- cuts[min(bins):(max(bins) + 1)]
-  bins <- bins - min(bins) + 1
+  # cuts <- cuts[min(bins):(length(unique(bins)) + 1)]
+  # bins <- bins - min(bins) + 1
 
   # warn if incorrect number of labels, and proceed with auto labels
   if (!is.null(labels) && !is.function(labels)) {
@@ -45,7 +44,7 @@ cut_explicit <- function(
     labels <- format_fun(vals, ...)
   }
 
-  bins <- factor(bins,labels = labels,ordered = TRUE)
+  bins <- factor(bins,levels = seq_along(labels), labels = labels,ordered = TRUE)
   bins
 }
 

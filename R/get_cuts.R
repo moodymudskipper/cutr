@@ -17,8 +17,14 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
     breaks      = {
       cuts <- sort(i)
       if (expand) {
-        if (xmin < cuts[1])            cuts <- c(xmin, cuts)
+        # doubling the boundary in case of cut on open ended boundary
+        if (xmax == cuts[length(cuts)] & closed == "left" & open_end)
+          cuts <- c(cuts, xmax)
+        if (xmin == cuts[1] & closed == "right" & open_end)
+          cuts <- c(xmin, cuts)
+        if (xmin < cuts[1]) cuts <- c(xmin, cuts)
         if (xmax > cuts[length(cuts)]) cuts <- c(cuts, xmax)
+
       } else if (crop) {
         # we limit x to what's inside the cuts, "inside" depends on `closed`
         if (closed == "left" || !open_end)
@@ -31,8 +37,8 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
       if (crop) {
         # if xmin is on a closed right border, cropping should not be done
         # or it will be passed tonext interval
-        if (closed == "left"  || !xmin %in% cuts) cuts <- c(xmin, cuts[cuts > xmin])
-        if (closed == "right" || !xmax %in% cuts) cuts <- c(cuts[cuts < xmax], xmax)
+        if (closed == "left"  || !xmin %in% cuts) cuts <- c(head(cuts[cuts < xmin],-1), xmin, cuts[cuts > xmin])
+        if (closed == "right" || !xmax %in% cuts) cuts <- c(cuts[cuts < xmax], xmax, cuts[cuts > xmax][-1])
       }
       cuts
       },
