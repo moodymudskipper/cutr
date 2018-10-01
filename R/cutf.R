@@ -5,8 +5,8 @@
 #' the input. By default it behaves exactly like `base::cut.default`
 #'
 #' @inheritParams base::cut.default
-#' @param format_fun
-#' @param ...
+#' @param format_fun formatting function
+#' @param ... additional arguments passed to `format_fun`
 #'
 #' @seealso base::cut
 #' @export

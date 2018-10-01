@@ -19,8 +19,8 @@
 #' will be labeled with the formatted version of that value instead of the
 #' interval endpoints, `unless oneval=FALSE`
 #' @param onlycuts set to `TRUE` to only return the vector of computed cuts. This consists of the interior values plus outer ranges.
-#' @param format_fun
-#' @param ...
+#' @param format_fun formatting function
+#' @param ... additional arguments passed to `format_fun`
 #'
 #' @return a factor variable with levels of the form `[a,b)` or formatted means
 #' (character strings) unless `onlycuts` is `TRUE` in which case a numeric
