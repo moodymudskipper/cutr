@@ -10,11 +10,11 @@ format_metric(x, prefixes = c("", "k", "M", "G"), digits = 3,
 \arguments{
 \item{x}{a numeric vector}
 
-\item{prefixes}{a vector or prefixes (k, M ...), lower case symbols (kilo, mega ...) or powers of tens (3, 6 ...).}
+\item{prefixes}{a vector or prefixes ('','k', 'M', ...), lower case symbols ('','kilo', 'mega' ...) or powers of tens (0, 3, 6 ...).}
 
-\item{digits}{integer used by signif or signif2}
+\item{digits}{integer used by signif or smart_signif}
 
-\item{smart_signif}{logical, if TRUE signif2 will be used instead of signif}
+\item{smart_signif}{logical, if TRUE smart_signif will be used instead of signif}
 
 \item{symbol}{logical, if TRUE, full symbol will be used, else prefix will be used}
 
