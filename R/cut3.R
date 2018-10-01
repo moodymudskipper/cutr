@@ -18,7 +18,6 @@
 #' @param open_end keep the open side open at the extremities
 #' @param sep,brackets character, used to build the default labels
 #' @param output character, class of output
-#' @param optim_fun character or 2 argument function
 #' @param format_fun formatting function
 #' @param ... additional arguments passed to \code{format_fun}
 #'
@@ -79,8 +78,8 @@
 #' set.seed(1)
 #' numbers  <- cumsum(abs(rnorm(100,100,100)))
 #' numbers  <- cumsum(abs(rnorm(10,10,10)))
-#' cut3(numbers, 10,"groups",format_fun = format_metric, digits=2)
-cut3 <- function(
+#' cutf3(numbers, 10,"groups",format_fun = format_metric, digits=2)
+cutf3 <- function(
   x,
   i,
   what = c("breaks","groups","n_by_group","n_intervals","width",
@@ -102,10 +101,20 @@ cut3 <- function(
   what   <- match.arg(what)
   closed <- match.arg(closed)
   output <- match.arg(output)
+
+  # extract relevant functions from i arg
+  if (what == "groups" && length(i) > 1) {
+    optim_fun <- i[[2]]
+    i <- i[[1]]
+  } else optim_fun <- NULL
+  if (what == "width" && length(i) > 1) {
+    width_fun <- i[[2]]
+    i <- i[[1]]
+  } else width_fun <- NULL
   i >= 1 || what == "breaks" || stop("i must be positive")
 
   # set mappers (handle formula notation if relevant)
-  set_mappers(labels, optim_fun, format_fun, only_formulas = TRUE)
+  set_mappers(labels, optim_fun, format_fun, width_fun, only_formulas = TRUE)
 
   # handle factors
   if (is.factor(x) && what == "breaks" && (is.character(i) || is.factor(i))) i <- match(as.character(i),levels(x))
@@ -118,9 +127,9 @@ cut3 <- function(
   # get breaks
   cuts <- get_cuts(x = as.numeric(x), i = i, what = what, expand = expand,
                    crop = crop, closed = closed, open_end = open_end,
-                   optim_fun = optim_fun)
+                   optim_fun = optim_fun, width_fun = width_fun)
   # after the cropping is done, ends are closed by definition
-  if(crop || expand) open_end <- FALSE
+  if (crop || expand) open_end <- FALSE
 
   if (length(cuts) == 1 && !expand)
     stop("Can't cut data if only one break is provided and `expand` is FALSE")
