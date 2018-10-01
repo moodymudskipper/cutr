@@ -1,13 +1,15 @@
 #' get cut points
 #'
-#' @inheritParams cut3
-#' @param optim_fun
-#' @param width_fun
+#' mainly used by `cutf3` but can be used to compute cut point without assessing
+#' intervals to data points
 #'
-#' @return
+#' @inheritParams cutf3
+#' @param optim_fun optimization function (used if `what = "group"`)
+#' @param width_fun left boundary function (used if `what = "width"`)
+#'
+#' @seealso cutf3
+#' @return a vector of cut points
 #' @export
-#'
-#' @examples
 get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_fun = NULL, width_fun = NULL){
   xrange <- range(x, na.rm = TRUE)
   xmin <- xrange[1]
