@@ -1,13 +1,37 @@
-get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_fun = NULL){
+#' get cut points
+#'
+#' @inheritParams cut3
+#' @param optim_fun
+#' @param width_fun
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_fun = NULL, width_fun = NULL){
   xrange <- range(x, na.rm = TRUE)
   xmin <- xrange[1]
   xmax <- xrange[2]
+
+  if (what == "width") {
+    what <- "breaks"
+    if (is.null(width_fun)) width_fun <- "min"
+    if (is.numeric(width_fun))       cut1 <- width_fun
+    else if (is.function(width_fun)) cut1 <- width_fun(x,i)
+    else if (width_fun == "min")     cut1 <- xmin
+    #else if (width_fun == "default") cut1 <- xmin - i/2
+
+    if (identical(width_fun, "max"))
+      i <- rev(seq(xmax,by = -i, length.out = ceiling((xmax - xmin)/i) + 1))
+    else
+      i <- seq(cut1, by = i, length.out = ceiling((xmax - cut1)/i) + 1)
+  }
 
   cuts <- switch(
     what,
     groups      = {
       if (is.null(optim_fun)) {
-        cuts <- quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE,names = FALSE,type = 3)
+        cuts <- quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE, names = FALSE,type = 3)
       } else {
         cuts <- get_optimal_cutpoints(x, i, optim_fun, closed)
         #cuts <- c(xmin,cuts[cuts > xmin & cuts < xmax],xmax)
