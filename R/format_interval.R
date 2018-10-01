@@ -21,14 +21,18 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
     }
   } else if (closed == "left") {
     if (!open_end) {
-      cut_list[[ind]] <-
-        c(x[which(x >= cuts[ind])[1]], x[max(which(x <= cuts[ind + 1]))])
-      end <- ind - 1
+      # prepare case for empty intervals!
+      #if (all(x < cuts[ind] || x > cuts[ind+1]))
+      if (all(x < cuts[ind]))
+        cut_list[[ind]] <- c(cuts[ind],cuts[ind + 1]) else
+          cut_list[[ind]] <- c(x[which(x >= cuts[ind])[1]], x[max(which(x <= cuts[ind + 1]))])
+        end <- ind - 1
     } else end <- ind - 2
 
     for (i in 1:end) {
-      cut_list[[i]] <-
-        c(x[which(x >= cuts[i])[1]], x[max(which(x < cuts[i + 1]))])
+      if (all(x < cuts[i] || x > cuts[i + 1]))
+        cut_list[[i]] <- c(cuts[i],cuts[i + 1]) else
+          cut_list[[i]] <- c(x[which(x >= cuts[i])[1]], x[max(which(x < cuts[i + 1]))])
     }
   }
   `.[` <- brackets[2]
@@ -37,6 +41,7 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
   if (is_factor) cuts_chr <- x_levels[unlist(cut_list)] else
     cuts_chr <- format_fun(unlist(cut_list),...)
   labels <- apply(matrix(cuts_chr,2),2,function(x) paste0(`.[`,x[1],sep,x[2],`.]`))
+  labels
 }
 
 
