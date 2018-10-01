@@ -8,8 +8,31 @@ get_cuts(x, i, what, expand, crop, closed = "left", open_end,
   optim_fun = NULL, width_fun = NULL)
 }
 \arguments{
-\item{width_fun}{}
+\item{x}{numeric vector to classify into intervals}
+
+\item{i}{numeric, character, or list, main parameter depending on \code{what}}
+
+\item{what}{character, choices can be abreviated}
+
+\item{expand}{logical, if TRUE cuts are added if necessary to cover min and max values}
+
+\item{crop}{logical, if TRUE intervals which go past the min or max values will be cropped}
+
+\item{closed}{character, which side of the intervals should be closed}
+
+\item{open_end}{keep the open side open at the extremities}
+
+\item{optim_fun}{optimization function (used if \code{what = "group"})}
+
+\item{width_fun}{left boundary function (used if \code{what = "width"})}
+}
+\value{
+a vector of cut points
 }
 \description{
-get cut points
+mainly used by \code{cutf3} but can be used to compute cut point without assessing
+intervals to data points
+}
+\seealso{
+cutf3
 }
