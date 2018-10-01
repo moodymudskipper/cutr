@@ -1,9 +1,9 @@
 #' format a numeric vector using metric system
 #'
 #' @param x a numeric vector
-#' @param prefixes a vector or prefixes (k, M ...), lower case symbols (kilo, mega ...) or powers of tens (3, 6 ...).
-#' @param digits integer used by signif or signif2
-#' @param smart_signif logical, if TRUE signif2 will be used instead of signif
+#' @param prefixes a vector or prefixes ('','k', 'M', ...), lower case symbols ('','kilo', 'mega' ...) or powers of tens (0, 3, 6 ...).
+#' @param digits integer used by signif or smart_signif
+#' @param smart_signif logical, if TRUE smart_signif will be used instead of signif
 #' @param symbol logical, if TRUE, full symbol will be used, else prefix will be used
 #' @param base_unit character, e.g. 'g'
 #' @param ... additional arguments passed to formatC
@@ -33,7 +33,7 @@ format_metric <- function(x, prefixes = c("","k","M","G"), digits = 3, smart_sig
   cuts <- as.numeric(cut(abs(x),c(-Inf,10^lkp$n[-1],Inf),right = FALSE))
   ns <- lkp$n[cuts]
   units <- lkp$units[cuts]
-  out <- if (smart_signif) signif2(x,digits) else signif(x,digits)
+  out <- if (smart_signif) smart_signif(x,digits) else signif(x,digits)
   out <- ifelse(is.finite(x), trimws(paste(formatC(out / 10^ns,...),units)), as.character(x))
   out
 }
