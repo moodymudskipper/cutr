@@ -45,6 +45,16 @@ cut_explicit <- function(
   }
 
   bins <- factor(bins,levels = seq_along(labels), labels = labels,ordered = TRUE)
+
+  if (squeeze) {
+    # to squeeze empty intervals let the cuts at originalpos but use open brackets
+    levels_ <- levels(bins)
+    notin_  <- !levels(bins) %in% bins
+    levels_notin_ <- levels_[notin_]
+    levels_notin_ <- gsub(paste0("\\",brackets[2]),brackets[1],levels_notin_)
+    levels_notin_ <- gsub(paste0("\\",brackets[4]),brackets[3],levels_notin_)
+    levels(bins)[notin_] <- levels_notin_
+  }
   bins
 }
 
