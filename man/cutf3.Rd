@@ -5,11 +5,11 @@
 \title{Cut a Numeric Variable into Intervals}
 \usage{
 cutf3(x, i, what = c("breaks", "groups", "n_by_group", "n_intervals",
-  "width", "width_0", "width_min", "width_max"), labels = NULL,
-  closed = c("left", "right"), expand = TRUE, crop = FALSE,
-  simplify = TRUE, squeeze = FALSE, open_end = FALSE,
-  brackets = c("(", "[", ")", "]"), sep = ",", output = c("ordered",
-  "factor", "character"), format_fun = formatC, ...)
+  "width", "cluster"), labels = NULL, closed = c("left", "right"),
+  expand = TRUE, crop = FALSE, simplify = TRUE, squeeze = FALSE,
+  open_end = FALSE, brackets = c("(", "[", ")", "]"), sep = ",",
+  output = c("ordered", "factor", "character"), format_fun = formatC,
+  ...)
 }
 \arguments{
 \item{x}{numeric vector to classify into intervals}
@@ -63,10 +63,10 @@ distributions, see help on optim_fun below to handle these cases }
 \item{n_by_group}{the number of desired items by group, with the
 same caveat as above}
 \item{n_intervals}{the number of desired intervals}
-\item{width}{the interval width, which will be centered on 0}
-\item{width_0}{same but intervals will start on 0}
-\item{width_min}{same but intervals will start on min value}
-\item{width_max}{same but intervals will end on max value}
+\item{width}{the interval width, which will be centered on 0 by default or
+at a different value (see dedicated section)}
+\item{cluster}{the number of clusters, or a numeric vector of length 2
+giving the minimum and maximum amount of clusters}
 }
 
 If \code{what} is \code{"group"} or \code{"width"} i can be a list in which the second
@@ -100,10 +100,11 @@ optimization of groups is not necessary and will be ressource expensive.
 \section{custom left boundary for \code{what = "width"}}{
 
 
-If \code{what = "width"} then \code{i} can be a list in which the second element is a
+If \code{what = "width"} then \code{i} can be either single numeric value setting the
+width of the interval or a list in which the second element is a
 function that will be applied on x (as a first parameter) and the cut points
 (as a second parameter). The output of this function will determine where the
-leftmost interval starts.
+leftmost interval starts. Formula notation is supported.
 
 Alternatively the parameter can be a numeric value or any of the following
 strings:
@@ -114,6 +115,14 @@ strings:
 \item{"centered"}{Margins are balanced on both sides}
 \item{"centered0"}{Interval containing zero is centered on zero}
 }
+}
+
+\section{cluster}{
+
+
+Uses function \code{Ckmeans.1d.dp} from package of same name to
+cluster \code{x} into \code{i} groups (\code{i} corresponds to the \code{k} parameter of
+\code{Ckmeans.1d.dp}). If \code{i} is a list its elements will be fed to \code{Cksegs.1d.dp}.
 }
 
 \section{format_fun}{
@@ -135,4 +144,12 @@ set.seed(1)
 numbers  <- cumsum(abs(rnorm(100,100,100)))
 numbers  <- cumsum(abs(rnorm(10,10,10)))
 cutf3(numbers, 10,"groups",format_fun = format_metric, digits=2)
+}
+\seealso{
+\code{?cut}
+\code{?Hmisc::cut2}
+\code{?format}
+\code{?formatC}
+\code{?format_metric}
+\code{?Ckmeans.1d.dp::Ckmeans.1d.dp}
 }

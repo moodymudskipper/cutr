@@ -17,15 +17,17 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
 
   if (what == "width") {
     what <- "breaks"
-    if (is.null(width_fun)) width_fun <- "min"
-    if (is.numeric(width_fun))       cut1 <- width_fun
-    else if (is.function(width_fun)) cut1 <- width_fun(x,i)
-    else if (width_fun == "min")     cut1 <- xmin
+    if (is.null(width_fun))            width_fun <- "left"
+    if (is.numeric(width_fun))         cut1 <- width_fun
+    else if (is.function(width_fun))   cut1 <- width_fun(x,i)
+    else if (width_fun == "left")      cut1 <- xmin
+    else if (width_fun == "right")     cut1 <- xmax # xmin + (xmax - xmin + i) %% i - i
+    else if (width_fun == "centered")  cut1 <- (xmin + xmax) / 2 #xmin + ((xmax-xmin + i) %% i - i)/2
+    else if (width_fun == "centered0") cut1 <- i/2 # 0 - i/2 + i * (xmin %/% i)
     #else if (width_fun == "default") cut1 <- xmin - i/2
-
-    if (identical(width_fun, "max"))
-      i <- rev(seq(xmax,by = -i, length.out = ceiling((xmax - xmin)/i) + 1))
-    else
+    cut1 <- xmin - (i - cut1 + xmin) %% i
+    #   i <- rev(seq(xmax,by = -i, length.out = ceiling((xmax - xmin)/i) + 1))
+    # else
       i <- seq(cut1, by = i, length.out = ceiling((xmax - cut1)/i) + 1)
   }
 
@@ -33,7 +35,7 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
     what,
     groups      = {
       if (is.null(optim_fun)) {
-        cuts <- quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE, names = FALSE,type = 3)
+        cuts <- unique(quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE, names = FALSE,type = 3))
       } else {
         cuts <- get_optimal_cutpoints(x, i, optim_fun, closed)
         #cuts <- c(xmin,cuts[cuts > xmin & cuts < xmax],xmax)
@@ -69,19 +71,24 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
       cuts
       },
     n_intervals = seq(xmin,xmax, len = i + 1),
-    width       = {
-      adj_range <- i*(round(xrange/i) + c(-0.5,0.5));
-      cuts <- seq(adj_range[1],adj_range[2], i)
-      if (crop) c(xmin,cuts[cuts > xmin & cuts < xmax],xmax) else cuts},
-    width_0     = seq(i*floor(xmin/i),i*ceiling(xmax/i),i),
-    width_min   = {
-      cuts <- union(seq(xmin, xmax, i),xmax)
-      if (!crop) cuts[length(cuts)] <- cuts[length(cuts) - 1] + i
-      cuts},
-    width_max    = {
-      cuts <- union(xmin, rev(seq(xmax, xmin, -i)))
-      if (!crop) cuts[1] <- cuts[2] - i
-      cuts}
+    cluster      = {
+      sortx <- sort(x)
+      bins <- kmeans(sortx,i)$cluster
+      cuts <- c(sortx[1], approx(seq_along(x),x,cumsum(rle(bins[-length(bins)])$lengths)+0.5)$y)
+    }
+    # width       = {
+    #   adj_range <- i*(round(xrange/i) + c(-0.5,0.5));
+    #   cuts <- seq(adj_range[1],adj_range[2], i)
+    #   if (crop) c(xmin,cuts[cuts > xmin & cuts < xmax],xmax) else cuts},
+    # width_0     = seq(i*floor(xmin/i),i*ceiling(xmax/i),i),
+    # width_min   = {
+    #   cuts <- union(seq(xmin, xmax, i),xmax)
+    #   if (!crop) cuts[length(cuts)] <- cuts[length(cuts) - 1] + i
+    #   cuts},
+    # width_max    = {
+    #   cuts <- union(xmin, rev(seq(xmax, xmin, -i)))
+    #   if (!crop) cuts[1] <- cuts[2] - i
+    #   cuts}
   )
   cuts
 }
