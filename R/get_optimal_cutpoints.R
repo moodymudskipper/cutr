@@ -15,6 +15,8 @@ get_optimal_cutpoints <- function(x, n, f, closed = c("left","right")){
 
   # bin with all combinations of cutpoints
   # need trick with Inf to be able to have univalue bins on both sides
+  n_poss <- prod(length(br):(length(br) - n + 2))/factorial(n - 1)
+  if (n_poss > 1e6) stop(n_poss, " possibilities would have to be tested, limit is set to 1e6")
   combn_     <- combn(br, n - 1, function(brks){
     if (closed == "right") brks <- c(-Inf, brks, xmax)
     if (closed == "left") brks  <- c(xmin, brks, Inf)
@@ -39,3 +41,6 @@ get_optimal_cutpoints <- function(x, n, f, closed = c("left","right")){
 biggest_small_bin <- function(sizes,cuts){-min(sizes)}
 smallest_big_bin  <- function(sizes,cuts){ max(sizes)}
 balanced          <- function(sizes,cuts){ sum((sizes - mean(sizes))^2)}
+
+
+Hmisc::cut2
