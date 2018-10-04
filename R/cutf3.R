@@ -35,8 +35,7 @@
 #'   \item{n_intervals}{the number of desired intervals}
 #'   \item{width}{the interval width, which will be centered on 0 by default or
 #'   at a different value (see dedicated section)}
-#'   \item{cluster}{the number of clusters, or a numeric vector of length 2
-#'   giving the minimum and maximum amount of clusters}
+#'   \item{cluster}{the number of clusters}
 #' }
 #'
 #' If `what` is `"group"` or `"width"` i can be a list in which the second
@@ -84,9 +83,8 @@
 #'
 #' @section cluster:
 #'
-#' Uses function `Ckmeans.1d.dp` from package of same name to
-#' cluster `x` into `i` groups (`i` corresponds to the `k` parameter of
-#' `Ckmeans.1d.dp`). If `i` is a list its elements will be fed to `Cksegs.1d.dp`.
+#' Uses function `stats::kmean` to
+#' cluster `x` into `i` groups
 #'
 #' @section format_fun:
 #'
@@ -106,7 +104,7 @@
 #' `?format`
 #' `?formatC`
 #' `?format_metric`
-#' `?Ckmeans.1d.dp::Ckmeans.1d.dp`
+#' `?kmeans
 #'
 #' @return a factor variable with levels of the form \code{"[a,b]"} or formatted means (character strings) unless \code{onlycuts} is \code{TRUE} in which case a numeric vector is returned
 #' @export
