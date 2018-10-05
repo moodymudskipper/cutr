@@ -39,8 +39,7 @@ cut_explicit <- function(
         if (is.factor(x)) levels(x)[ind] else ind
     }
   } else if (is.function(labels)) {
-    # apply center_fun
-    vals <- tapply(x, bins, function(w) labels(w))
+    vals   <- mapply(function(u,v,w) labels(u,c(v,w)), split(x,bins), cuts[-length(cuts)], cuts[-1])
     labels <- format_fun(vals, ...)
   }
 
@@ -75,19 +74,3 @@ cut_explicit <- function(
 middle <- function(x) {
   mean(range(x))
 }
-
-
-prefix  <- "["
-prefix <- "(("
-prefix <- "x"
-
-suffi1  <- "["
-suffi2 <- "(("
-suffi3 <- "x"
-
-replacement <- "x"
-
-sub("","a","hgjgj")
-
-
-escapeRegex("[hello)+")
