@@ -4,7 +4,7 @@
 \alias{smart_signif}
 \title{Minimum preferred significant digits}
 \usage{
-smart_signif(x, digits = 1L, ...)
+smart_signif(x, digits = 3L, ...)
 }
 \arguments{
 \item{x}{numeric, length 2 or more}

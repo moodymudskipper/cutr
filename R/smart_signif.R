@@ -25,7 +25,7 @@
 #' smart_signif(x, 2)
 #' smart_signif(x, 3)
 #' }
-smart_signif <- function(x, digits=1L, ...) {
+smart_signif <- function(x, digits=3L, ...) {
   stopifnot(length(x) > 1L)
   logscale <- ceiling(log10(abs(x)))
   logdiff <- log10(diff(x))
