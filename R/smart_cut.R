@@ -89,14 +89,14 @@
 #' @section format_fun:
 #'
 #' The original base::cut uses formatC in its code to format the labels while
-#' the commonly used Hmisc::cut2 uses format. cut3 allows one to choose and to
+#' the commonly used Hmisc::cut2 uses format. smart_cut allows one to choose and to
 #' pass additional parameters to ... .
 #'
 #' Any formating function can be used as long as it takes as a first argument a
 #' vector of characters and returns one.
 #'
 #' The function format_metric including in cutr permits additional formatting
-#' especially well suited for cut3
+#' especially well suited for smart_cut
 #'
 #' @seealso
 #' `?cut`
@@ -113,8 +113,8 @@
 #' set.seed(1)
 #' numbers  <- cumsum(abs(rnorm(100,100,100)))
 #' numbers  <- cumsum(abs(rnorm(10,10,10)))
-#' cutf3(numbers, 10,"groups",format_fun = format_metric, digits=2)
-cutf3 <- function(
+#' smart_cut(numbers, 10,"groups",format_fun = format_metric, digits=2)
+smart_cut <- function(
   x,
   i,
   what = c("breaks", "groups", "n_by_group", "n_intervals", "width", "cluster"),
