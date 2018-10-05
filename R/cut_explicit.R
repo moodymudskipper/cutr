@@ -58,19 +58,3 @@ cut_explicit <- function(
   }
   bins
 }
-
-
-#' Middle of range
-#'
-#' For easy use in labels argument of cut3
-#'
-#' @param x a numeric vector
-#'
-#' @return a double
-#' @export
-#'
-#' @examples
-#' middle(c(10,12,20))
-middle <- function(x) {
-  mean(range(x))
-}
