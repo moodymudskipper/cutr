@@ -25,18 +25,14 @@ significant digits, where "distinguishable" means
 "between neighbors". This means that if reducing more digits would
 cause two neighbors to reduce to the same number, then the
 reduction cannot take place.
-
-References:
-\itemize{
-\item \href{https://stackoverflow.com/q/51616332/3358272}{Original question on StackOverflow}
-}
 }
 \examples{
-\dontrun{
 set.seed(1)
 x  <- cumsum(abs(rnorm(10,100,100)))
 smart_signif(x, 1)
 smart_signif(x, 2)
 smart_signif(x, 3)
 }
+\seealso{
+\href{https://stackoverflow.com/q/51616332/3358272}{Original question on StackOverflow}
 }

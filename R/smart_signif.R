@@ -7,24 +7,22 @@
 #' cause two neighbors to reduce to the same number, then the
 #' reduction cannot take place.
 #'
-#' References:
-#'
-#' - [Original question on StackOverflow](https://stackoverflow.com/q/51616332/3358272)
+#' @seealso [Original question on StackOverflow](https://stackoverflow.com/q/51616332/3358272)
 #'
 #' @param x numeric, length 2 or more
 #' @param digits integer, number of preferred remaining significant digits
 #' @param ... unused, kept for compatibility reasons
 #' @return numeric vector
+#' @section author:
+#' [r2evans](https://stackoverflow.com/users/3358272/r2evans)
 #' @export
 #' @md
 #' @examples
-#' \dontrun{
 #' set.seed(1)
 #' x  <- cumsum(abs(rnorm(10,100,100)))
 #' smart_signif(x, 1)
 #' smart_signif(x, 2)
 #' smart_signif(x, 3)
-#' }
 smart_signif <- function(x, digits=3L, ...) {
   stopifnot(length(x) > 1L)
   logscale <- ceiling(log10(abs(x)))
