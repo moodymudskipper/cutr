@@ -134,13 +134,18 @@ smart_cut <- function(
   what   <- match.arg(what)
   closed <- match.arg(closed)
   output <- match.arg(output)
-  if(is.null(brackets)) brackets <- rep("",4)
+  if (is.null(brackets)) brackets <- rep("",4)
 
   # extract relevant functions from i arg
-  if (what == "groups" && length(i) > 1) {
+  if (what %in% c("groups", "n_by_group") && length(i) > 1) {
     optim_fun <- i[[2]]
     i <- i[[1]]
   } else optim_fun <- NULL
+
+  # convert "n_by_group" case into a "groups" case
+  if (what == "n_by_group") {
+    i <- max(1, floor(sum(!is.na(x))/i))
+    what <- "groups"}
 
   if (what == "width" && length(i) > 1) {
     width_fun <- i[[2]]
@@ -154,11 +159,6 @@ smart_cut <- function(
 
   # handle factors
   if (is.factor(x) && what == "breaks" && (is.character(i) || is.factor(i))) i <- match(as.character(i),levels(x))
-
-  # convert "n_by_group" case into a "groups" case
-  if (what == "n_by_group") {
-    i <- max(1, floor(sum(!is.na(x))/i))
-    what <- "groups"}
 
   # get breaks
   cuts <- get_cuts(x = as.numeric(x), i = i, what = what, expand = expand,
