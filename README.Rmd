@@ -1,0 +1,190 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# cutr
+
+cutr extends `base::cut.default`'s possibilities, getting inspiration from existing 
+alternatives such as `Hmisc::cut2` and the `ggplot2::cut_*` family of functions, 
+but going much further.
+
+## Installation
+
+You can install cutr from github with:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("moodymudskipper/cutr")
+```
+
+## default behavior + `closed` and `open_end`
+
+We build a distribution and show the default behavior, in the rest of the
+document we'll show results using `table` as it's more telling.
+
+```{r}
+library(cutr)
+x <- c(rep(1,3),rep(2,2),3:6,17:20)
+hist(x,breaks = 0:20)
+cuts <- c(0,5,10,20)
+smart_cut(x,cuts)
+table(smart_cut(x,cuts))
+```
+
+The output is very similar to what we get with `base` or `Hmisc` and `ggplot2` 
+alternatives.
+
+```{r}
+table(base::cut(x,cuts))
+table(Hmisc::cut2(x,cuts))
+table(smart_cut(x,cuts,"breaks"))
+```
+
+A the difference with `base` is that we close by default the left size,  this can be changed by setting the `closed` parameter to `"right"`.
+
+Another is that the ends are both closed in `smart_cut`, this can be changed by setting the `open_end` parameter to `FALSE`
+
+`closed` is borrowed from `ggplot2::cut_*` functions, and corresponds to the `RIGHT` parameter of `base::cut.default`.
+
+
+`open_end` corresponds to the (negated) `include.lowest` parameter of `base::cut`.
+
+The difference with `Hmisc` is due to the formatting function, which is `formatC` for `cut` and `smart_cut`, and `format` for `Hmisc` (which gives all labels the same width). The display of `smart_cut` is highly flexible thanks to the argument `format_fun` detailed further in this document.
+
+## `what` and `i`
+
+The `what` parameter determines how cuts will be chosen, depending on the value of `i`.
+
+```{r}
+table(smart_cut(x,cuts,"breaks"))                   # fixed breaks
+table(smart_cut(x,2,"groups"))                      # groups defined by quantiles
+table(smart_cut(x,list(2,"balanced"),"groups"))     # optimized groups of equal size
+table(smart_cut(x,3,"n_by_group"))                  # try to get 3 items by group using quantiles
+table(smart_cut(x,list(3,"balanced"),"n_by_group")) # try to get 3 items by group using optimization
+table(smart_cut(x,3,"n_intervals"))                 # intervals of equal width
+table(smart_cut(x,7,"width"))                       # interval of equal defined width, start on 1st value
+table(smart_cut(x,list(7,"right"),"width"))         # interval of equal defined width, end on last value
+table(smart_cut(x,list(6,"centered"),"width"))      # interval of equal defined width, centered
+table(smart_cut(x,list(6,"centered0"),"width"))     # interval of equal defined width, centered on 0
+table(smart_cut(x,list(7,0),"width"))               # interval of equal defined width, starting on 0
+table(smart_cut(x,3,"cluster"))                     # create groups by running a kmeans clustering
+```
+
+
+
+## `simplify`
+
+`TRUE` by default, when a value is the only one in its group, display it as a 
+label, without brackets.  Similar to `oneval` in `Hmisc::cut2`.
+
+```{r}
+table(smart_cut(x, 5, "width", simplify = TRUE))
+table(smart_cut(x, 5, "groups", simplify = FALSE))
+```
+
+
+## `expand`
+
+expand makes sure all values from x will be in an interval by expanding the cut
+points. `base::cut.default` never expands, `Hmisc::cut2` always expands.
+
+```{r}
+table(smart_cut(x,c(4,10,18)))
+table(smart_cut(x,c(4,10,18),expand = FALSE))
+```
+
+## `crop`
+
+`crop` is `FALSE` by default, if `TRUE` the side intervals are reduced to fit the data.
+
+```{r}
+table(smart_cut(x,c(0,10,30)))
+table(smart_cut(x,c(0,10,30),crop = FALSE))
+```
+
+## `squeeze`
+
+`squeeze` is `FALSE` by default, if `TRUE` every interval is reduced to fit the data.
+
+```{r}
+table(smart_cut(x,c(0,10,30)))
+table(smart_cut(x,c(0,10,30),squeeze = TRUE))
+```
+
+
+## `brackets` + `sep`
+
+Different brackets can be chosen
+
+```{r}
+table(smart_cut(x,c(0,10,30), brackets = c("]","[","[","]")))
+table(smart_cut(x,c(0,10,30), brackets = NULL, sep = "~", squeeze= TRUE))
+```
+
+## `labels`
+
+`labels` can be a vector just like in `base::cut.default`, but it can also
+be a function of 2 arguments, which are a vector of values contained in the 
+interval and a vector of cutpoints.
+
+
+```{r}
+table(smart_cut(x,c(4,10)))
+table(smart_cut(x,c(4,10),labels = ~mean(.x)))   # mean of values by interval
+table(smart_cut(x,c(4,10),labels = ~mean(.y)))   # center of interval
+table(smart_cut(x,c(4,10),labels = ~median(.x))) # median
+table(smart_cut(x,c(4,10),labels = ~paste(
+  sep="~",.y[1],round(mean(.x),2),.y[2]))) # a more sophisticated label
+```
+
+
+## `format_fun`
+
+With `cutr` the user can provide any formating function through the argument `format_fun`, including the package function `format_metric` (more info on value formating in the dedicated section).
+
+```{r}
+table(smart_cut(x^6 + x/100,5,"g"))
+table(smart_cut(x^6 + x/100,5,"g",format_fun = format, digits = 3))
+table(smart_cut(x^6,5,"g",format_fun = signif))
+table(smart_cut(x^6,5,"g",format_fun = smart_signif))
+table(smart_cut(x^6,5,"g",format_fun = format_metric))
+```
+
+## more on `groups`
+
+`groups` and `n_by_group` try to place cut points at relevant quantile positions,
+we won't get the required number of groups if several quantiles fall on the same 
+value, to remedy to this we can use an optimization function (the default one
+will most likely be enough).
+
+
+```{r}
+table(smart_cut(x,3,"groups"))
+table(smart_cut(x,list(3,"balanced"),"groups"))
+```
+
+the second element of the list can be a string
+(which will be mapped to a predefined function) or
+a cusom made 2 argument function that is applied on all possible bin combinations :
+Bin size is the first argument and the cut points is the second. 
+the combination that return the lowest value when passed to optim_fun will be
+selected (or the first of them if the minimum is not unique). "balanced"
+minimizes the variance between groups and will work for most purposes.
+
+## `cutf` and `cutf2`
+
+These are copies of `base::cut.default` and `Hmisc::cut2` with the difference
+that the formatting function can be used freely. All the features are contained
+in `smart_cut` but these functions allow users to keep the interface, and
+defaults of the function they know and to modify existing code easily,
+for example to leverage `format_metric` with minimal effort.
