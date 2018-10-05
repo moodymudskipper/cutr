@@ -47,12 +47,14 @@ cut_explicit <- function(
   bins <- factor(bins,levels = seq_along(labels), labels = labels,ordered = TRUE)
 
   if (squeeze) {
-    # to squeeze empty intervals let the cuts at originalpos but use open brackets
+    # to squeeze empty intervals let the cuts at original pos but use open brackets
     levels_ <- levels(bins)
     notin_  <- !levels(bins) %in% bins
     levels_notin_ <- levels_[notin_]
-    levels_notin_ <- gsub(paste0("\\",brackets[2]),brackets[1],levels_notin_)
-    levels_notin_ <- gsub(paste0("\\",brackets[4]),brackets[3],levels_notin_)
+    b2 <- gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", brackets[2])
+    b4 <- gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", brackets[4])
+    levels_notin_ <- sub(paste0("^",b2),brackets[1],levels_notin_)
+    levels_notin_ <- sub(paste0(b4,"$"),brackets[3],levels_notin_)
     levels(bins)[notin_] <- levels_notin_
   }
   bins
@@ -73,3 +75,19 @@ cut_explicit <- function(
 middle <- function(x) {
   mean(range(x))
 }
+
+
+prefix  <- "["
+prefix <- "(("
+prefix <- "x"
+
+suffi1  <- "["
+suffi2 <- "(("
+suffi3 <- "x"
+
+replacement <- "x"
+
+sub("","a","hgjgj")
+
+
+escapeRegex("[hello)+")

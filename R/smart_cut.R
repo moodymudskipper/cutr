@@ -134,6 +134,7 @@ smart_cut <- function(
   what   <- match.arg(what)
   closed <- match.arg(closed)
   output <- match.arg(output)
+  if(is.null(brackets)) brackets <- rep("",4)
 
   # extract relevant functions from i arg
   if (what == "groups" && length(i) > 1) {

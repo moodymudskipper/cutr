@@ -209,3 +209,13 @@ test_that("what = 'groups' works as expected", {
   expect_brks(c("[1,3)", "[3,20]"), .)
 
 })
+
+
+test_that("custom brackets works", {
+  x <- c(rep(1,7),rep(2,5),3:6,17:20)
+  . <- smart_cut(x, 2, "groups", closed = "left", open_end = TRUE, crop = FALSE,
+                 brackets = NULL, sep="-")
+  . <- smart_cut(x, 2, "groups", closed = "left", squeeze=TRUE, open_end = TRUE,
+                 crop = FALSE, brackets = NULL,sep="-")
+
+})
