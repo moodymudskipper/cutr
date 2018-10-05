@@ -219,3 +219,11 @@ test_that("custom brackets works", {
                  crop = FALSE, brackets = NULL,sep="-")
 
 })
+
+
+test_that("NAs don't break the package", {
+  x <- c(NA,rep(1,7),NA, rep(2,5),3:6,17:20,NA,NA)
+  . <- smart_cut(x, 2, "groups", closed = "left", open_end = TRUE, crop = FALSE,
+                 brackets = NULL, sep="-")
+
+})
