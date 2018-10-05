@@ -102,7 +102,7 @@ table(smart_cut(x,c(4,10,18),expand = FALSE))
 
 ```{r}
 table(smart_cut(x,c(0,10,30)))
-table(smart_cut(x,c(0,10,30),crop = FALSE))
+table(smart_cut(x,c(0,10,30),crop = TRUE))
 ```
 
 ## `squeeze`

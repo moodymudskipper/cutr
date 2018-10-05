@@ -165,9 +165,9 @@ table(smart_cut(x,c(0,10,30)))
 #> 
 #>  [0,10) [10,30] 
 #>       9       4
-table(smart_cut(x,c(0,10,30),crop = FALSE))
+table(smart_cut(x,c(0,10,30),crop = TRUE))
 #> 
-#>  [0,10) [10,30] 
+#>  [1,10) [10,20] 
 #>       9       4
 ```
 
