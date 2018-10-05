@@ -39,8 +39,8 @@ cut_explicit <- function(
         if (is.factor(x)) levels(x)[ind] else ind
     }
   } else if (is.function(labels)) {
-    vals   <- mapply(function(u,v,w) labels(u,c(v,w)), split(x,bins), cuts[-length(cuts)], cuts[-1])
-    labels <- format_fun(vals, ...)
+    labels   <- mapply(function(u,v,w) labels(u,c(v,w)), split(x,bins), cuts[-length(cuts)], cuts[-1])
+    if(is.numeric(labels)) labels <- format_fun(labels, ...)
   }
 
   bins <- factor(bins,levels = seq_along(labels), labels = labels,ordered = TRUE)
