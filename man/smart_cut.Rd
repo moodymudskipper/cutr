@@ -138,10 +138,69 @@ especially well suited for smart_cut
 }
 
 \examples{
-set.seed(1)
-numbers  <- cumsum(abs(rnorm(100,100,100)))
-numbers  <- cumsum(abs(rnorm(10,10,10)))
-smart_cut(numbers, 10,"groups",format_fun = format_metric, digits=2)
+x <- c(rep(1,3),rep(2,2),3:6,17:20)
+
+# fixed breaks
+table(smart_cut(x,cuts,"breaks"))
+
+# groups defined by quantiles
+table(smart_cut(x,2,"groups"))
+
+# optimized groups of equal size
+table(smart_cut(x,list(2,"balanced"),"groups"))
+
+# try to get 3 items by group using quantiles
+table(smart_cut(x,3,"n_by_group"))
+
+# try to get 3 items by group using optimization
+table(smart_cut(x,list(3,"balanced"),"n_by_group"))
+
+# intervals of equal width
+table(smart_cut(x,3,"n_intervals"))
+
+# interval of equal defined width,
+table(smart_cut(x,7,"width"))                       # start on 1st value
+table(smart_cut(x,list(7,"right"),"width"))         # end on last value
+table(smart_cut(x,list(6,"centered"),"width"))      # centered
+table(smart_cut(x,list(6,"centered0"),"width"))     # centered on 0
+table(smart_cut(x,list(7,0),"width"))               # starting on 0
+
+# create groups by running a kmeans clustering
+table(smart_cut(x,3,"cluster"))
+simplify
+table(smart_cut(x, 5, "width"))
+table(smart_cut(x, 5, "width", simplify = FALSE))
+
+# expand
+table(smart_cut(x,c(4,10,18)))
+table(smart_cut(x,c(4,10,18),expand = FALSE))
+
+# crop
+table(smart_cut(x,c(0,10,30)))
+table(smart_cut(x,c(0,10,30),crop = TRUE))
+
+# squeeze
+table(smart_cut(x,c(0,10,30)))
+table(smart_cut(x,c(0,10,30),squeeze = TRUE))
+
+# brackets
+table(smart_cut(x,c(0,10,30), brackets = c("]","[","[","]")))
+table(smart_cut(x,c(0,10,30), brackets = NULL, sep = "~", squeeze= TRUE))
+
+# labels
+table(smart_cut(x,c(4,10)))
+table(smart_cut(x,c(4,10),labels = ~mean(.x)))   # mean of values by interval
+table(smart_cut(x,c(4,10),labels = ~mean(.y)))   # center of interval
+table(smart_cut(x,c(4,10),labels = ~median(.x))) # median
+table(smart_cut(x,c(4,10),labels = ~paste(
+  sep="~",.y[1],round(mean(.x),2),.y[2]))) # a more sophisticated label
+
+# format_fun
+table(smart_cut(x^6 + x/100,5,"g"))
+table(smart_cut(x^6 + x/100,5,"g",format_fun = format, digits = 3))
+table(smart_cut(x^6,5,"g",format_fun = signif))
+table(smart_cut(x^6,5,"g",format_fun = smart_signif))
+table(smart_cut(x^6,5,"g",format_fun = format_metric))
 }
 \seealso{
 \code{?cut}

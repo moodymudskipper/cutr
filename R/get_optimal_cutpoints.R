@@ -41,6 +41,3 @@ get_optimal_cutpoints <- function(x, n, f, closed = c("left","right")){
 biggest_small_bin <- function(sizes,cuts){-min(sizes)}
 smallest_big_bin  <- function(sizes,cuts){ max(sizes)}
 balanced          <- function(sizes,cuts){ sum((sizes - mean(sizes))^2)}
-
-
-Hmisc::cut2

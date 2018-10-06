@@ -235,7 +235,7 @@ table(smart_cut(x,c(4,10),labels = ~paste(
 `format_fun`
 ------------
 
-With `cutr` the user can provide any formating function through the argument `format_fun`, including the package function `format_metric` (more info on value formating in the dedicated section).
+With `cutr` the user can provide any formating function through the argument `format_fun`, including the package function `format_metric`.
 
 ``` r
 table(smart_cut(x^6 + x/100,5,"g"))
@@ -271,7 +271,9 @@ table(smart_cut(x^6,5,"g",format_fun = format_metric))
 more on `groups`
 ----------------
 
-`groups` and `n_by_group` try to place cut points at relevant quantile positions, we won't get the required number of groups if several quantiles fall on the same value, to remedy to this we can use an optimization function (the default one will most likely be enough).
+`groups` and `n_by_group` try to place cut points at relevant quantile positions, we won't get the required number of groups if several quantiles fall on the same value, to remedy to this we can use an optimization function.
+
+The most straightforward way to optimize bin size, and the only way most will ever need, is to minimize the variance between the target bin size and the actual binsize, this is what happens when the `i` argument is `list(n, "balanced")`.
 
 ``` r
 table(smart_cut(x,3,"groups"))
@@ -284,7 +286,9 @@ table(smart_cut(x,list(3,"balanced"),"groups"))
 #>       5       4       4
 ```
 
-the second element of the list can be a string (which will be mapped to a predefined function) or a cusom made 2 argument function that is applied on all possible bin combinations : Bin size is the first argument and the cut points is the second. the combination that return the lowest value when passed to optim\_fun will be selected (or the first of them if the minimum is not unique). "balanced" minimizes the variance between groups and will work for most purposes.
+the second element of the list can be a string (which will be mapped to a predefined function) or a custom made 2 argument function that is applied on all possible bin combinations, its arguments are : \* bin size \* the cut points
+
+The combination of cut points that returns the lowest value when passed to this function will be selected (or the first of them if the minimum is not unique).
 
 `cutf` and `cutf2`
 ------------------

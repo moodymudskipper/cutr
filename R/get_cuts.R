@@ -1,15 +1,14 @@
 #' get cut points
 #'
-#' mainly used by `cutf3` but can be used to compute cut point without assessing
+#' mainly used by `smart_cut` but can be used to compute cut point without assessing
 #' intervals to data points
 #'
-#' @inheritParams cutf3
+#' @inheritParams smart_cut
 #' @param optim_fun optimization function (used if `what = "group"`)
 #' @param width_fun left boundary function (used if `what = "width"`)
 #'
-#' @seealso cutf3
+#' @seealso ?smart_cut
 #' @return a vector of cut points
-#' @export
 get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_fun = NULL, width_fun = NULL){
   xrange <- range(x, na.rm = TRUE)
   xmin <- xrange[1]
@@ -24,11 +23,8 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
     else if (width_fun == "right")     cut1 <- xmax # xmin + (xmax - xmin + i) %% i - i
     else if (width_fun == "centered")  cut1 <- (xmin + xmax) / 2 #xmin + ((xmax-xmin + i) %% i - i)/2
     else if (width_fun == "centered0") cut1 <- i/2 # 0 - i/2 + i * (xmin %/% i)
-    #else if (width_fun == "default") cut1 <- xmin - i/2
     cut1 <- xmin - (i - cut1 + xmin) %% i
-    #   i <- rev(seq(xmax,by = -i, length.out = ceiling((xmax - xmin)/i) + 1))
-    # else
-      i <- seq(cut1, by = i, length.out = ceiling((xmax - cut1)/i) + 1)
+    i <- seq(cut1, by = i, length.out = ceiling((xmax - cut1)/i) + 1)
   }
 
   cuts <- switch(
@@ -74,21 +70,8 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
     cluster      = {
       sortx <- sort(x)
       bins <- kmeans(sortx,i)$cluster
-      cuts <- c(sortx[1], approx(seq_along(x),x,cumsum(rle(bins[-length(bins)])$lengths)+0.5)$y)
+      cuts <- c(sortx[1], approx(seq_along(x),x,cumsum(rle(bins[-length(bins)])$lengths) + 0.5)$y)
     }
-    # width       = {
-    #   adj_range <- i*(round(xrange/i) + c(-0.5,0.5));
-    #   cuts <- seq(adj_range[1],adj_range[2], i)
-    #   if (crop) c(xmin,cuts[cuts > xmin & cuts < xmax],xmax) else cuts},
-    # width_0     = seq(i*floor(xmin/i),i*ceiling(xmax/i),i),
-    # width_min   = {
-    #   cuts <- union(seq(xmin, xmax, i),xmax)
-    #   if (!crop) cuts[length(cuts)] <- cuts[length(cuts) - 1] + i
-    #   cuts},
-    # width_max    = {
-    #   cuts <- union(xmin, rev(seq(xmax, xmin, -i)))
-    #   if (!crop) cuts[1] <- cuts[2] - i
-    #   cuts}
   )
   cuts
 }

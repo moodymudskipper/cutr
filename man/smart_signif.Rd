@@ -26,6 +26,11 @@ significant digits, where "distinguishable" means
 cause two neighbors to reduce to the same number, then the
 reduction cannot take place.
 }
+\section{author}{
+
+\href{https://stackoverflow.com/users/3358272/r2evans}{r2evans}
+}
+
 \examples{
 set.seed(1)
 x  <- cumsum(abs(rnorm(10,100,100)))
