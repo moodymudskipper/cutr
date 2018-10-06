@@ -133,10 +133,10 @@ table(smart_cut(x, 5, "width", simplify = TRUE))
 #> 
 #>   [1,6)       6 [11,16) [16,21] 
 #>       8       1       0       4
-table(smart_cut(x, 5, "groups", simplify = FALSE))
+table(smart_cut(x, 5, "width", simplify = FALSE))
 #> 
-#>   [1,2)   [2,5)  [5,17) [17,20] 
-#>       3       4       2       4
+#>   [1,6)  [6,11) [11,16) [16,21] 
+#>       8       1       0       4
 ```
 
 `expand`

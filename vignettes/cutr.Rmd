@@ -82,7 +82,7 @@ label, without brackets.  Similar to `oneval` in `Hmisc::cut2`.
 
 ```{r}
 table(smart_cut(x, 5, "width", simplify = TRUE))
-table(smart_cut(x, 5, "groups", simplify = FALSE))
+table(smart_cut(x, 5, "width", simplify = FALSE))
 ```
 
 
