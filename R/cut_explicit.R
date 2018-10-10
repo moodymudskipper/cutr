@@ -15,6 +15,7 @@ cut_explicit <- function(
     }
   }
 
+
   if (is.null(labels)) {
     # format
     if (is.factor(x)) cuts <- setNames(cuts, levels(x)[cuts])
@@ -39,8 +40,18 @@ cut_explicit <- function(
         if (is.factor(x)) levels(x)[ind] else ind
     }
   } else if (is.function(labels)) {
-    labels   <- mapply(function(u,v,w) labels(u,c(v,w)), split(x,bins), cuts[-length(cuts)], cuts[-1])
-    if(is.numeric(labels)) labels <- format_fun(labels, ...)
+    # u is values in bins, v is left cut point, w is right cut point
+    is_factor_lgl <- is.factor(x)
+    labels   <- mapply(
+      function(u,v,w) {
+        ifelse(is_factor_lgl,
+               labels(u,factor(levels(x)[c(v,w)], levels = levels(x))),
+               labels(u,c(v,w)))
+        },
+      split(x,bins),
+      cuts[-length(cuts)],
+      cuts[-1])
+    if (is.numeric(labels)) labels <- format_fun(labels, ...)
   }
 
   bins <- factor(bins,levels = seq_along(labels), labels = labels,ordered = TRUE)
