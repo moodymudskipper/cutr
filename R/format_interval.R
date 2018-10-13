@@ -16,8 +16,11 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
     } else start <- 1
 
     for (i in start:ind) {
+      if (all(x < cuts[i] || x > cuts[i + 1]))
+        cut_list[[i]] <- c(cuts[i],cuts[i + 1]) else
       cut_list[[i]] <-
-        c(x[which(x > cuts[i])[1]], x[max(which(x <= cuts[i + 1]))])
+        c(x[which(x > cuts[i])[1]], x[max(-Inf,which(x <= cuts[i + 1]))])
+        if (anyNA(cut_list[[i]])) cut_list[[i]] <- c(cuts[i+1],cuts[i+1])
     }
   } else if (closed == "left") {
     if (!open_end) {
@@ -32,7 +35,8 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
     for (i in 1:end) {
       if (all(x < cuts[i] || x > cuts[i + 1]))
         cut_list[[i]] <- c(cuts[i],cuts[i + 1]) else
-          cut_list[[i]] <- c(x[which(x >= cuts[i])[1]], x[max(which(x < cuts[i + 1]))])
+          cut_list[[i]] <- c(x[which(x >= cuts[i])[1]], x[max(-Inf,which(x < cuts[i + 1]))])
+        if (anyNA(cut_list[[i]])) cut_list[[i]] <- c(cuts[i],cuts[i])
     }
   }
   `.[` <- brackets[2]
