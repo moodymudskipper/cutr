@@ -16,7 +16,7 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
     } else start <- 1
 
     for (i in start:ind) {
-      if (all(x < cuts[i] || x > cuts[i + 1]))
+      if (all(x < cuts[i] | x > cuts[i + 1]))
         cut_list[[i]] <- c(cuts[i],cuts[i + 1]) else
       cut_list[[i]] <-
         c(x[which(x > cuts[i])[1]], x[max(-Inf,which(x <= cuts[i + 1]))])
@@ -33,7 +33,7 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
     } else end <- ind - 2
 
     for (i in 1:end) {
-      if (all(x < cuts[i] || x > cuts[i + 1]))
+      if (all(x < cuts[i] | x > cuts[i + 1]))
         cut_list[[i]] <- c(cuts[i],cuts[i + 1]) else
           cut_list[[i]] <- c(x[which(x >= cuts[i])[1]], x[max(-Inf,which(x < cuts[i + 1]))])
         if (anyNA(cut_list[[i]])) cut_list[[i]] <- c(cuts[i],cuts[i])
