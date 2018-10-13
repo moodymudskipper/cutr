@@ -15,7 +15,7 @@
 #' value will be named by it
 #' @param squeeze logical, if TRUE all bins are cropped so they are closed on
 #'  both sides on their min and max values, useful for sparse data and factors
-#' @param open_end keep the open side open at the extremities
+#' @param open_end include in last interval on open side the values which fall on the last cutpoint
 #' @param sep,brackets character, used to build the default labels
 #' @param output character, class of output
 #' @param format_fun formatting function
