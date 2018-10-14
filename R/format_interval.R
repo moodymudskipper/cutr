@@ -10,17 +10,18 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
 
   if (closed == "right") {
     if (!open_end) {
-      cut_list[[1]] <-
-        c(x[which(x >= cuts[1])[1]], x[max(which(x <= cuts[2]))])
+      #cut_list[[1]] <- c(x[which(x >= cuts[1])[1]], x[max(which(x <= cuts[2]))])
+      cut_list[[1]] <- c(min(x[x >= cuts[1]],Inf), max(x[x <= cuts[2]],-Inf))
+      if (any(is.infinite(cut_list[[1]]))) cut_list[[1]] <- c(cuts[2],cuts[2])
       start <- 2
     } else start <- 1
 
     for (i in start:ind) {
       if (all(x < cuts[i] | x > cuts[i + 1]))
         cut_list[[i]] <- c(cuts[i],cuts[i + 1]) else
-      cut_list[[i]] <-
-        c(x[which(x > cuts[i])[1]], x[max(-Inf,which(x <= cuts[i + 1]))])
-        if (anyNA(cut_list[[i]])) cut_list[[i]] <- c(cuts[i+1],cuts[i+1])
+          # cut_list[[i]] <- c(x[which(x > cuts[i])[1]], x[max(-Inf,which(x <= cuts[i + 1]))])
+          cut_list[[i]] <- c(min(x[x > cuts[i]], Inf), max(x[x <= cuts[i + 1]], -Inf))
+        if (any(is.infinite(cut_list[[i]]))) cut_list[[i]] <- c(cuts[i + 1],cuts[i + 1])
     }
   } else if (closed == "left") {
     if (!open_end) {
@@ -28,15 +29,18 @@ format_interval_squeezed <- function(x, cuts, closed, open_end, brackets, sep, f
       #if (all(x < cuts[ind] || x > cuts[ind+1]))
       if (all(x < cuts[ind]))
         cut_list[[ind]] <- c(cuts[ind],cuts[ind + 1]) else
-          cut_list[[ind]] <- c(x[which(x >= cuts[ind])[1]], x[max(which(x <= cuts[ind + 1]))])
+          # cut_list[[ind]] <- c(x[which(x >= cuts[ind])[1]], x[max(which(x <= cuts[ind + 1]))])
+          cut_list[[ind]] <- c(min(x[x >= cuts[ind]],Inf), max(x[x <= cuts[ind + 1]],-Inf))
+        if (any(is.infinite(cut_list[[ind]]))) cut_list[[ind]] <- c(cuts[ind],cuts[ind])
         end <- ind - 1
     } else end <- ind - 2
 
     for (i in 1:end) {
       if (all(x < cuts[i] | x > cuts[i + 1]))
         cut_list[[i]] <- c(cuts[i],cuts[i + 1]) else
-          cut_list[[i]] <- c(x[which(x >= cuts[i])[1]], x[max(-Inf,which(x < cuts[i + 1]))])
-        if (anyNA(cut_list[[i]])) cut_list[[i]] <- c(cuts[i],cuts[i])
+          # cut_list[[i]] <- c(x[which(x >= cuts[i])[1]], x[max(-Inf,which(x < cuts[i + 1]))])
+          cut_list[[i]] <- c(min(x[x >= cuts[i]],Inf), max(x[x < cuts[i + 1]],-Inf))
+        if (any(is.infinite(cut_list[[i]]))) cut_list[[i]] <- c(cuts[i],cuts[i])
     }
   }
   `.[` <- brackets[2]
