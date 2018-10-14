@@ -1,11 +1,10 @@
 
 cut_explicit <- function(
   x, cuts , labels, simplify, closed, squeeze, open_end,
-  brackets, sep, format_fun, ...) {
-  #browser()
+  brackets, sep, format_fun, output, ...) {
+
   bins <- .bincode(as.numeric(x), breaks = cuts, right = closed == "right", include.lowest = !open_end)
-  # cuts <- cuts[min(bins):(length(unique(bins)) + 1)]
-  # bins <- bins - min(bins) + 1
+  if(output == "numeric") return(bins)
 
   # warn if incorrect number of labels, and proceed with auto labels
   if (!is.null(labels) && !is.function(labels)) {
@@ -67,5 +66,15 @@ cut_explicit <- function(
     levels_notin_ <- sub(paste0(b4,"$"),brackets[3],levels_notin_)
     levels(bins)[notin_] <- levels_notin_
   }
+
+  # coerce to appropriate class (ordered factor by default)
+  if (output == "character") {
+    bins <- as.character(bins)
+  } else if (output == "factor") {
+    bins <- factor(bins,ordered = FALSE)
+  } else if (output == "labels") {
+    bins <- levels(bins)
+  }
+
   bins
 }

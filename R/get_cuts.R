@@ -60,7 +60,7 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
       }
       if (crop) {
         # if xmin is on a closed right border, cropping should not be done
-        # or it will be passed tonext interval
+        # or it will be passed to next interval
         if (closed == "left"  || !xmin %in% cuts) cuts <- c(head(cuts[cuts < xmin],-1), xmin, cuts[cuts > xmin])
         if (closed == "right" || !xmax %in% cuts) cuts <- c(cuts[cuts < xmax], xmax, cuts[cuts > xmax][-1])
       }

@@ -186,7 +186,7 @@ smart_cut <- function(
   open_end   = FALSE,
   brackets   = c("(", "[", ")", "]"),
   sep        = ",",
-  output     = c("ordered", "factor", "character"),
+  output     = c("ordered", "factor", "character","numeric","breaks","labels"),
   format_fun = formatC, ...){
 
   # checks
@@ -223,6 +223,9 @@ smart_cut <- function(
   cuts <- get_cuts(x = as.numeric(x), i = i, what = what, expand = expand,
                    crop = crop, closed = closed, open_end = open_end,
                    optim_fun = optim_fun, width_fun = width_fun)
+
+  if (output == "breaks") return(cuts)
+
   # after the cropping is done, ends are closed by definition
   if (crop || expand) open_end <- FALSE
 
@@ -234,14 +237,7 @@ smart_cut <- function(
   bins <- cut_explicit(x = x, cuts = cuts , labels = labels, simplify = simplify,
                        closed = closed, squeeze = squeeze, open_end = open_end,
                        brackets = brackets, sep = sep,
-                       format_fun = format_fun, ...)
-
-  # coerce to appropriate class (ordered factor by default)
-  if (output == "character") {
-    bins <- as.character(bins)
-  } else if (output == "factor") {
-    bins <- factor(bins,ordered = FALSE)
-  }
+                       format_fun = format_fun, output = output, ...)
 
   bins
 }

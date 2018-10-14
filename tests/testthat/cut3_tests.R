@@ -133,8 +133,11 @@ test_that("squeeze", {
   x      <- c(rep(1,7),rep(2,5),3:6,17:20)
   breaks <- c(0, 3, 8, 14,17.3, 22)
   expect_dstr(c(12, 4, 0, 1, 3), smart_cut(x, breaks, "breaks", closed = "left", open_end = TRUE, crop = TRUE, squeeze = TRUE))
-  expect_brks(c("[1,2]", "[3,8]", "(8,14)", "17", "[18,20]"),
+  expect_brks(c("[1,2]", "[3,6]", "(8,14)", "17", "[18,20]"),
               smart_cut(x, breaks, "breaks", closed = "left", open_end = TRUE, crop = TRUE, expand = FALSE, squeeze = TRUE))
+  expect_brks(c("(-5,0)","(0,0)","[1,6]","(8,12)","[17,20]","(30,40)"),
+              smart_cut(x,c(-5,0,1,8,12,30,40),squeeze = TRUE))
+
 })
 
 
@@ -185,10 +188,6 @@ test_that("what = 'groups' works as expected", {
   expect_dstr(c(7, 13), .)
   expect_brks(c("1", "[2,20]"), .)
 
-  . <- smart_cut(x, 6, "groups", closed = "left", open_end = TRUE, crop = FALSE)
-  expect_dstr(c(7, 13), .)
-  expect_brks(c("1", "[2,20]"), .)
-
   # balanced
   . <- smart_cut(x, list(2,"balanced"), "groups", closed = "left", open_end = TRUE, crop = FALSE)
   expect_dstr(c(12, 8), .)
@@ -214,9 +213,9 @@ test_that("what = 'groups' works as expected", {
 test_that("custom brackets works", {
   x <- c(rep(1,7),rep(2,5),3:6,17:20)
   . <- smart_cut(x, 2, "groups", closed = "left", open_end = TRUE, crop = FALSE,
-                 brackets = NULL, sep="-")
-  . <- smart_cut(x, 2, "groups", closed = "left", squeeze=TRUE, open_end = TRUE,
-                 crop = FALSE, brackets = NULL,sep="-")
+                 brackets = NULL, sep = "-")
+  . <- smart_cut(x, 2, "groups", closed = "left", squeeze = TRUE, open_end = TRUE,
+                 crop = FALSE, brackets = NULL,sep = "-")
 
 })
 
@@ -224,6 +223,6 @@ test_that("custom brackets works", {
 test_that("NAs don't break the package", {
   x <- c(NA,rep(1,7),NA, rep(2,5),3:6,17:20,NA,NA)
   . <- smart_cut(x, 2, "groups", closed = "left", open_end = TRUE, crop = FALSE,
-                 brackets = NULL, sep="-")
+                 brackets = NULL, sep = "-")
 
 })
