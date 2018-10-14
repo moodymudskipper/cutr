@@ -1,10 +1,7 @@
 
 cut_explicit <- function(
-  x, cuts , labels, simplify, closed, squeeze, open_end,
+  bins, x, cuts , labels, simplify, closed, squeeze, open_end,
   brackets, sep, format_fun, output, ...) {
-
-  bins <- .bincode(as.numeric(x), breaks = cuts, right = closed == "right", include.lowest = !open_end)
-  if(output == "numeric") return(bins)
 
   # warn if incorrect number of labels, and proceed with auto labels
   if (!is.null(labels) && !is.function(labels)) {
@@ -13,7 +10,6 @@ cut_explicit <- function(
       labels <- NULL
     }
   }
-
 
   if (is.null(labels)) {
     # format
@@ -31,7 +27,8 @@ cut_explicit <- function(
     # simplify
     if (simplify) {
       # ind is NA or unique(x) value for each bin
-      ind <- tapply(x,bins,FUN = function(xi) if (length(unique(xi)) == 1) xi[1] else NA)
+      ind <- tapply(x,bins,FUN = function(xi)
+        if (length(unique(xi)) == 1) xi[1] else NA)
       # remove nas, ind is named with bins
       ind <- ind[!is.na(ind)]
       if (length(ind))
@@ -53,10 +50,11 @@ cut_explicit <- function(
     if (is.numeric(labels)) labels <- format_fun(labels, ...)
   }
 
-  bins <- factor(bins,levels = seq_along(labels), labels = labels,ordered = TRUE)
+  bins <- factor(
+    bins,levels = seq_along(labels), labels = labels,ordered = TRUE)
 
   if (squeeze) {
-    # to squeeze empty intervals let the cuts at original pos but use open brackets
+    # to squeeze empty intervals let cuts at original pos but use open brackets
     levels_ <- levels(bins)
     notin_  <- !levels(bins) %in% bins
     levels_notin_ <- levels_[notin_]

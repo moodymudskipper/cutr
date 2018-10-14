@@ -29,9 +29,12 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
 
   cuts <- switch(
     what,
+    bins = if (closed == "left") unname(c(tapply(x,i,min),xmax)) else
+      unname(c(xmin,tapply(x,i,max))),
     groups      = {
       if (is.null(optim_fun)) {
-        cuts <- unique(quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE, names = FALSE,type = 3))
+        cuts <- unique(quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE,
+                                names = FALSE,type = 3))
       } else {
         cuts <- get_optimal_cutpoints(x, i, optim_fun, closed)
         #cuts <- c(xmin,cuts[cuts > xmin & cuts < xmax],xmax)

@@ -176,7 +176,7 @@
 smart_cut <- function(
   x,
   i,
-  what = c("breaks", "groups", "n_by_group", "n_intervals", "width", "cluster"),
+  what = c("breaks", "groups", "n_by_group", "n_intervals", "width", "cluster", "bins"),
   labels     = NULL,
   closed     = c("left", "right"),
   expand     = TRUE,
@@ -194,6 +194,14 @@ smart_cut <- function(
   closed <- match.arg(closed)
   output <- match.arg(output)
   if (is.null(brackets)) brackets <- rep("",4)
+  if (what == "bins") {
+    if (length(i) != length(x))
+      stop("i and x have different lengths, invalid for `what = 'bins'`")
+    if (anyNA(i))
+      stop("bins containing NA values are not supported")
+    if (is.unsorted(i[order(x)]))
+      stop("bins must be sorted along x")
+  }
 
   # extract relevant functions from i arg
   if (what %in% c("groups", "n_by_group") && length(i) > 1) {
@@ -217,7 +225,8 @@ smart_cut <- function(
   set_mappers(labels, optim_fun, format_fun, width_fun, only_formulas = TRUE)
 
   # handle factors
-  if (is.factor(x) && what == "breaks" && (is.character(i) || is.factor(i))) i <- match(as.character(i),levels(x))
+  if (is.factor(x) && what == "breaks" && (is.character(i) || is.factor(i)))
+    i <- match(as.character(i),levels(x))
 
   # get breaks
   cuts <- get_cuts(x = as.numeric(x), i = i, what = what, expand = expand,
@@ -232,9 +241,20 @@ smart_cut <- function(
   if (length(cuts) == 1 && !expand)
     stop("Can't cut data if only one break is provided and `expand` is FALSE")
 
+  # get numeric bins
+  if (what == "bins") {
+    bins <- i
+  } else {
+    bins <- .bincode(
+      as.numeric(x), breaks = cuts, right = (closed == "right"),
+      include.lowest = !open_end)
+  }
+
+
+  if (output == "numeric") return(bins)
 
   # get raw output
-  bins <- cut_explicit(x = x, cuts = cuts , labels = labels, simplify = simplify,
+  bins <- cut_explicit(bins = bins, x = x, cuts = cuts , labels = labels, simplify = simplify,
                        closed = closed, squeeze = squeeze, open_end = open_end,
                        brackets = brackets, sep = sep,
                        format_fun = format_fun, output = output, ...)
