@@ -5,11 +5,11 @@
 \title{Cut a Numeric Variable into Intervals}
 \usage{
 smart_cut(x, i, what = c("breaks", "groups", "n_by_group", "n_intervals",
-  "width", "cluster"), labels = NULL, closed = c("left", "right"),
-  expand = TRUE, crop = FALSE, simplify = TRUE, squeeze = FALSE,
-  open_end = FALSE, brackets = c("(", "[", ")", "]"), sep = ",",
-  output = c("ordered", "factor", "character"), format_fun = formatC,
-  ...)
+  "width", "cluster", "bins"), labels = NULL, closed = c("left",
+  "right"), expand = TRUE, crop = FALSE, simplify = TRUE,
+  squeeze = FALSE, open_end = FALSE, brackets = c("(", "[", ")",
+  "]"), sep = ",", output = c("ordered", "factor", "character",
+  "numeric", "breaks", "labels"), format_fun = formatC, ...)
 }
 \arguments{
 \item{x}{numeric vector to classify into intervals}
@@ -33,7 +33,7 @@ value will be named by it}
 \item{squeeze}{logical, if TRUE all bins are cropped so they are closed on
 both sides on their min and max values, useful for sparse data and factors}
 
-\item{open_end}{keep the open side open at the extremities}
+\item{open_end}{include in last interval on open side the values which fall on the last cutpoint}
 
 \item{sep, brackets}{character, used to build the default labels}
 
