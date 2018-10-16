@@ -34,7 +34,7 @@ get_cuts <- function(x, i, what, expand, crop, closed = "left", open_end, optim_
     groups      = {
       if (is.null(optim_fun)) {
         cuts <- unique(quantile(x, seq(0, 1, length.out = i + 1), na.rm = TRUE,
-                                names = FALSE,type = 3))
+                                names = FALSE))
       } else {
         cuts <- get_optimal_cutpoints(x, i, optim_fun, closed)
         #cuts <- c(xmin,cuts[cuts > xmin & cuts < xmax],xmax)
