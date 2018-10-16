@@ -20,7 +20,7 @@ get_cuts(x, i, what, expand, crop, closed = "left", open_end,
 
 \item{closed}{character, which side of the intervals should be closed}
 
-\item{open_end}{keep the open side open at the extremities}
+\item{open_end}{include in last interval on open side the values which fall on the last cutpoint}
 
 \item{optim_fun}{optimization function (used if \code{what = "group"})}
 
