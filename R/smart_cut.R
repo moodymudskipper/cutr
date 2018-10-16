@@ -36,6 +36,10 @@
 #'   \item{width}{the interval width, which will be centered on 0 by default or
 #'   at a different value (see dedicated section)}
 #'   \item{cluster}{the number of clusters}
+#'   \item{bins}{the bin values, useful if using an external clustering function}
+#'   \item{rough}{cuts into i groups of equal size (if possible), 2 elements of
+#'   same value can be in different buckets, hence the "rough" adjective. Default
+#'   brackets might be misleading when making this choice}
 #' }
 #'
 #' If `what` is `"group"` or `"width"` i can be a list in which the second
@@ -176,7 +180,7 @@
 smart_cut <- function(
   x,
   i,
-  what = c("breaks", "groups", "n_by_group", "n_intervals", "width", "cluster", "bins"),
+  what = c("breaks", "groups", "n_by_group", "n_intervals", "width", "cluster", "bins", "rough"),
   labels     = NULL,
   closed     = c("left", "right"),
   expand     = TRUE,
@@ -194,6 +198,10 @@ smart_cut <- function(
   closed <- match.arg(closed)
   output <- match.arg(output)
   if (is.null(brackets)) brackets <- rep("",4)
+  if (what == "rough") {
+    i <- as.integer(floor(i * (rank(x, ties.method = "first", na.last = "keep") - 1)/sum(!is.na(x)) + 1))
+    what <- "bins"
+  }
   if (what == "bins") {
     if (length(i) != length(x))
       stop("i and x have different lengths, invalid for `what = 'bins'`")
@@ -258,6 +266,6 @@ smart_cut <- function(
                        closed = closed, squeeze = squeeze, open_end = open_end,
                        brackets = brackets, sep = sep,
                        format_fun = format_fun, output = output, ...)
-
   bins
 }
+

@@ -5,11 +5,12 @@
 \title{Cut a Numeric Variable into Intervals}
 \usage{
 smart_cut(x, i, what = c("breaks", "groups", "n_by_group", "n_intervals",
-  "width", "cluster", "bins"), labels = NULL, closed = c("left",
-  "right"), expand = TRUE, crop = FALSE, simplify = TRUE,
-  squeeze = FALSE, open_end = FALSE, brackets = c("(", "[", ")",
-  "]"), sep = ",", output = c("ordered", "factor", "character",
-  "numeric", "breaks", "labels"), format_fun = formatC, ...)
+  "width", "cluster", "bins", "rough"), labels = NULL,
+  closed = c("left", "right"), expand = TRUE, crop = FALSE,
+  simplify = TRUE, squeeze = FALSE, open_end = FALSE,
+  brackets = c("(", "[", ")", "]"), sep = ",", output = c("ordered",
+  "factor", "character", "numeric", "breaks", "labels"),
+  format_fun = formatC, ...)
 }
 \arguments{
 \item{x}{numeric vector to classify into intervals}
@@ -66,6 +67,10 @@ same caveat as above}
 \item{width}{the interval width, which will be centered on 0 by default or
 at a different value (see dedicated section)}
 \item{cluster}{the number of clusters}
+\item{bins}{the bin values, useful if using an external clustering function}
+\item{rough}{cuts into i groups of equal size (if possible), 2 elements of
+same value can be in different buckets, hence the "rough" adjective. Default
+brackets might be misleading when making this choice}
 }
 
 If \code{what} is \code{"group"} or \code{"width"} i can be a list in which the second
