@@ -57,7 +57,7 @@ table(smart_cut(x,cuts,"breaks"))
 #>       7       2       4
 ```
 
-A the difference with `base` is that we close by default the left size, this can be changed by setting the `closed` parameter to `"right"`.
+A the difference with `base` is that we close by default the left side, this can be changed by setting the `closed` parameter to `"right"`.
 
 Another is that the ends are both closed in `smart_cut`, this can be changed by setting the `open_end` parameter to `FALSE`
 
