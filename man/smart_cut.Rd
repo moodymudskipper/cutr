@@ -4,13 +4,24 @@
 \alias{smart_cut}
 \title{Cut a Numeric Variable into Intervals}
 \usage{
-smart_cut(x, i, what = c("breaks", "groups", "n_by_group", "n_intervals",
-  "width", "cluster", "bins", "rough"), labels = NULL,
-  closed = c("left", "right"), expand = TRUE, crop = FALSE,
-  simplify = TRUE, squeeze = FALSE, open_end = FALSE,
-  brackets = c("(", "[", ")", "]"), sep = ",", output = c("ordered",
-  "factor", "character", "numeric", "breaks", "labels"),
-  format_fun = formatC, ...)
+smart_cut(
+  x,
+  i,
+  what = c("breaks", "groups", "n_by_group", "n_intervals", "width", "cluster", "bins",
+    "rough"),
+  labels = NULL,
+  closed = c("left", "right"),
+  expand = TRUE,
+  crop = FALSE,
+  simplify = TRUE,
+  squeeze = FALSE,
+  open_end = FALSE,
+  brackets = c("(", "[", ")", "]"),
+  sep = ",",
+  output = c("ordered", "factor", "character", "numeric", "breaks", "labels"),
+  format_fun = formatC,
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector to classify into intervals}
@@ -146,7 +157,7 @@ especially well suited for smart_cut
 x <- c(rep(1,3),rep(2,2),3:6,17:20)
 
 # fixed breaks
-table(smart_cut(x,cuts,"breaks"))
+table(smart_cut(x, c(0, 5, 10, 20), "breaks"))
 
 # groups defined by quantiles
 table(smart_cut(x,2,"groups"))
@@ -172,7 +183,8 @@ table(smart_cut(x,list(7,0),"width"))               # starting on 0
 
 # create groups by running a kmeans clustering
 table(smart_cut(x,3,"cluster"))
-simplify
+
+# simplify
 table(smart_cut(x, 5, "width"))
 table(smart_cut(x, 5, "width", simplify = FALSE))
 

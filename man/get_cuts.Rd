@@ -4,8 +4,17 @@
 \alias{get_cuts}
 \title{get cut points}
 \usage{
-get_cuts(x, i, what, expand, crop, closed = "left", open_end,
-  optim_fun = NULL, width_fun = NULL)
+get_cuts(
+  x,
+  i,
+  what,
+  expand,
+  crop,
+  closed = "left",
+  open_end,
+  optim_fun = NULL,
+  width_fun = NULL
+)
 }
 \arguments{
 \item{x}{numeric vector to classify into intervals}
