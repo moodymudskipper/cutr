@@ -7,10 +7,15 @@ Description: Supports factors, adhoc formating, group optimization and much more
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat,
+Suggests: 
+    testthat,
     knitr,
     rmarkdown,
-    Hmisc
+    purrr
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.3.2.9000
 Roxygen: list(markdown = TRUE)
+Imports: 
+    Hmisc,
+    stats,
+    utils
