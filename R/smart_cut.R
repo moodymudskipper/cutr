@@ -227,7 +227,7 @@ smart_cut <- function(
 
     i <- i[[1]]
   } else width_fun <- NULL
-  i >= 1 || what == "breaks" || stop("i must be positive")
+  all(i >= 1) || what == "breaks" || stop("i must be positive")
 
   # set mappers (handle formula notation if relevant)
   set_mappers(labels, optim_fun, format_fun, width_fun, only_formulas = TRUE)
