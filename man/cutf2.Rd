@@ -4,9 +4,19 @@
 \alias{cutf2}
 \title{Cut a Numeric Variable into Intervals}
 \usage{
-cutf2(x, cuts, m = 150, g, levels.mean = FALSE, digits,
-  minmax = TRUE, oneval = TRUE, onlycuts = FALSE,
-  format_fun = format, ...)
+cutf2(
+  x,
+  cuts,
+  m = 150,
+  g,
+  levels.mean = FALSE,
+  digits,
+  minmax = TRUE,
+  oneval = TRUE,
+  onlycuts = FALSE,
+  format_fun = format,
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector to classify into intervals}
@@ -29,7 +39,7 @@ Default is 3 (5 if \code{levels.mean=TRUE})}
 
 \item{oneval}{if an interval contains only one unique value, the interval
 will be labeled with the formatted version of that value instead of the
-interval endpoints, \code{unless oneval=FALSE}}
+interval endpoints, \verb{unless oneval=FALSE}}
 
 \item{onlycuts}{set to \code{TRUE} to only return the vector of computed cuts. This consists of the interior values plus outer ranges.}
 
@@ -38,7 +48,7 @@ interval endpoints, \code{unless oneval=FALSE}}
 \item{...}{additional arguments passed to \code{format_fun}}
 }
 \value{
-a factor variable with levels of the form \code{[a,b)} or formatted means
+a factor variable with levels of the form \verb{[a,b)} or formatted means
 (character strings) unless \code{onlycuts} is \code{TRUE} in which case a numeric
 vector is returned
 }
@@ -52,14 +62,11 @@ set.seed(1)
 Z <- 1000*stats::rnorm(10000)
 table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000)))
 table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = formatC))
-table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = signif2)) # investigate NaN issue!
 table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = format_metric))
 table(cutf2(Z, g=10))      # quantile groups
 table(cutf2(Z, g=10, format_fun = formatC))
-table(cutf2(Z, g=10, format_fun = signif2))
 table(cutf2(Z, g=10, format_fun = format_metric))
 table(cutf2(Z, m=500))      # group x into intevals with at least 50 obs.
 table(cutf2(Z, m=500, format_fun = formatC))
-table(cutf2(Z, m=500, format_fun = signif2))
 table(cutf2(Z, m=500, format_fun = format_metric))
 }

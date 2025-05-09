@@ -16,7 +16,6 @@
 #' Z <- 1000*stats::rnorm(10000)
 #' table(cutf(Z, c(-10005, -5000, 100, 0, 50, 10000)))
 #' table(cutf(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = format))
-#' table(cutf(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = signif2))
 #' table(cutf(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = format_metric))
 cutf <- function(x, breaks, labels = NULL, include.lowest = FALSE, right = TRUE,
                   dig.lab = 3L, ordered_result = FALSE, format_fun = formatC, ...) {

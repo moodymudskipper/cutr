@@ -4,8 +4,15 @@
 \alias{format_metric}
 \title{format a numeric vector using metric system}
 \usage{
-format_metric(x, prefixes = c("", "k", "M", "G"), digits = 3,
-  smart_signif = FALSE, symbol = TRUE, base_unit = "", ...)
+format_metric(
+  x,
+  prefixes = c("", "k", "M", "G"),
+  digits = 3,
+  smart_signif = FALSE,
+  symbol = TRUE,
+  base_unit = "",
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric vector}
@@ -31,5 +38,5 @@ format a numeric vector using metric system
 \examples{
 format_metric(c(-2500,0.15,3,5e6),c(0,3))
 format_metric(c(-2500,0.15,3,5e6),"kilo")
-format_metric(c(-2500,0.15,3,5e6),base_unit="€")
+format_metric(c(-2500,0.15,3,5e6),base_unit="\U{20AC}")
 }

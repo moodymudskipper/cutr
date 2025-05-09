@@ -32,15 +32,12 @@
 #' Z <- 1000*stats::rnorm(10000)
 #' table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000)))
 #' table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = formatC))
-#' table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = signif2)) # investigate NaN issue!
 #' table(cutf2(Z, c(-10005, -5000, 100, 0, 50, 10000), format_fun = format_metric))
 #' table(cutf2(Z, g=10))      # quantile groups
 #' table(cutf2(Z, g=10, format_fun = formatC))
-#' table(cutf2(Z, g=10, format_fun = signif2))
 #' table(cutf2(Z, g=10, format_fun = format_metric))
 #' table(cutf2(Z, m=500))      # group x into intevals with at least 50 obs.
 #' table(cutf2(Z, m=500, format_fun = formatC))
-#' table(cutf2(Z, m=500, format_fun = signif2))
 #' table(cutf2(Z, m=500, format_fun = format_metric))
 cutf2 <- function (x, cuts, m = 150, g, levels.mean = FALSE, digits, minmax = TRUE,
                    oneval = TRUE, onlycuts = FALSE, format_fun = format, ...)

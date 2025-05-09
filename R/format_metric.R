@@ -14,13 +14,13 @@
 #' @examples
 #' format_metric(c(-2500,0.15,3,5e6),c(0,3))
 #' format_metric(c(-2500,0.15,3,5e6),"kilo")
-#' format_metric(c(-2500,0.15,3,5e6),base_unit="€")
+#' format_metric(c(-2500,0.15,3,5e6),base_unit="\U{20AC}")
 format_metric <- function(x, prefixes = c("","k","M","G"), digits = 3, smart_signif = FALSE, symbol=TRUE, base_unit="", ...){
   all_units <- data.frame(
     prefix = c("yocto", "zepto", "atto", "femto", "pico", "nano", "micro",
                "milli", "centi", "deci", "", "deca", "hecto", "kilo", "mega",
                "giga", "tera", "peta", "exa", "zetta", "yotta"),
-    symbol = c("y", "z", "a", "f", "p", "n", "µ", "m", "c", "d", "", "da",
+    symbol = c("y", "z", "a", "f", "p", "n", "\U{B5}", "m", "c", "d", "", "da",
                "h", "k", "M", "G", "T", "P", "E", "Z", "Y"),
     n = c(-24, -21, -18, -15, -12, -9, -6, -3, -2, -1, 0, 1, 2, 3, 6,
           9, 12, 15, 18, 21, 24),

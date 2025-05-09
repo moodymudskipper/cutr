@@ -117,7 +117,7 @@
 #' x <- c(rep(1,3),rep(2,2),3:6,17:20)
 #'
 #' # fixed breaks
-#' table(smart_cut(x,cuts,"breaks"))
+#' table(smart_cut(x, c(0, 5, 10, 20), "breaks"))
 #'
 #' # groups defined by quantiles
 #' table(smart_cut(x,2,"groups"))
@@ -143,7 +143,8 @@
 #'
 #' # create groups by running a kmeans clustering
 #' table(smart_cut(x,3,"cluster"))
-#' simplify
+#'
+#' # simplify
 #' table(smart_cut(x, 5, "width"))
 #' table(smart_cut(x, 5, "width", simplify = FALSE))
 #'
@@ -227,7 +228,7 @@ smart_cut <- function(
 
     i <- i[[1]]
   } else width_fun <- NULL
-  i >= 1 || what == "breaks" || stop("i must be positive")
+  all(i >= 1) || what == "breaks" || stop("i must be positive")
 
   # set mappers (handle formula notation if relevant)
   set_mappers(labels, optim_fun, format_fun, width_fun, only_formulas = TRUE)
